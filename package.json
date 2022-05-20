@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "react-latex-next": "^2.1.0",
+    "react-pixi-fiber": "^0.14.3"
+  }
+}
