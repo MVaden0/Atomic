@@ -59,7 +59,7 @@ const [name, setName] = useState("circle");
             </div>
 
         </div>
-        <div style={{ backgroundColor: '#1a1a1a', width: '70vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+        <div style={{ backgroundColor: '#1a1a1a', width: 'calc(100vw - 400px)', height: '100vh'}}>
             <DrawingSurface  draw={draw} width='800px' height='800px' />
         </div>
     </div>
