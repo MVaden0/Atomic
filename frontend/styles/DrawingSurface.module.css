@@ -1,40 +1,24 @@
 .container {
+  background-color: '#1a1a1a';
+  width: 1520px;
+  height: 936px;
+  z-index: 0;
+}
+
+.canvasContainer {
   border-radius: 2rem;
-  background-color: #F2CD60;
+  background-color: #8B94A3;
+  position: relative;
+  z-index: 999;
+  position: 'relative';
+}
+
+.backgroundCanvas {
+  position: absolute;
+  z-index: 1;
+  
 }
 
 .canvas {
   border-radius: 2rem;
 }
-
-.canvas::after {
-  content: '';
-  background-color: #ccc;
-  position: absolute;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  cursor: ew-resize;
-}
-
-.ball {
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  border-radius: 50%;
-  
-  offset-path: path('M10 80 Q 77.5 10, 145 80 T 280 80');
-  offset-distance: 0%;
-
-  animation: red-ball 2s linear alternate infinite;
-}
-
-@keyframes red-ball {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
-  }
-}
-

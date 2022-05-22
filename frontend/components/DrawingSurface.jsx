@@ -8,6 +8,11 @@ const DrawingSurface = (props) => {
   const containerRef = useRef(null)
   const canvasRef = useRef(null)
 
+  const topBorderRef = useRef(false);
+  const leftBorderRef = useRef(false);
+  const bottomBorderRef = useRef(false);
+  const rightBorderRef = useRef(false);
+
   const isResizing = useRef(false);
   const isResizingTop = useRef(false);
   const isResizingLeft = useRef(false);
@@ -37,13 +42,28 @@ const DrawingSurface = (props) => {
     TOPRIGHT: Symbol('topright'),
   };
   
-  const topPosition = useRef(0);
+  //const topPosition = useRef(0);
   const leftPosition = useRef(0);
   const bottomPosition = useRef(0);
   const rightPosition = useRef(0);
 
-  const [width, setWidth] = useState(100)
-  const [height, setHeight] = useState(100)
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [top, setTop] = useState(0);
+  const [left, setLeft] = useState(0);
+
+  const getBoundingRect = (element) => {
+    const {top, left, bottom, right, height, width} = element.getBoundingClientRect();
+
+    return {
+      top: top,
+      left: left,
+      bottom: bottom,
+      right: right,
+      height: height,
+      width: width
+    }
+  }
 
   const checkEdge = (pos, bounds, offset) => {
     return pos < bounds + offset && pos > bounds - offset;
@@ -116,6 +136,12 @@ const DrawingSurface = (props) => {
     // get reference to container
     const container = containerRef.current;
 
+    // get reference to borders
+    const topBorder = topBorderRef.current;
+    const leftBorder = leftBorderRef.current;
+    const bottomBorder = bottomBorderRef.current;
+    const rightBorder = rightBorderRef.current;
+
     // get positioning of container
     const { top, left, bottom, right } = container.getBoundingClientRect()
 
@@ -155,6 +181,14 @@ const DrawingSurface = (props) => {
 
     switch(resizeCurrentCase) {
       case resizeCurrent.TOPLEFT:
+        topBorder.style.display = 'block';
+        leftBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        setTop(event.pageY);
+        setHeight(800 - ((event.pageY - 68) * 2));
+        setLeft(event.pageX - 400);
+        setWidth(800 - ((event.pageX - 760) * 2));
         break;
       case resizeCurrent.BOTTOMRIGHT:
         break;
@@ -163,33 +197,38 @@ const DrawingSurface = (props) => {
       case resizeCurrent.TOPRIGHT:
         break;
       case resizeCurrent.TOP:
-        topPosition.current = event.pageY
-        container.style.top = `${topPosition.current}px`
+        topBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        setTop(event.pageY);
+        setHeight(800 - ((event.pageY - 68) * 2));
         break;
       case resizeCurrent.LEFT:
-        leftPosition.current = event.pageX - 400;
-        container.style.left = `${leftPosition.current}px`
+        leftBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        setLeft(event.pageX - 400);
+        setWidth(800 - ((event.pageX - 760) * 2));
         break;
       case resizeCurrent.BOTTOM:
         topPosition.current = event.pageY - 800
         container.style.top = `${topPosition.current}px`
         break;
       case resizeCurrent.RIGHT:
+        rightBorder.style.display = 'block';
         leftPosition.current = event.pageX - 1200
         container.style.left = `${leftPosition.current}px`
         break;
     };
-
-    /*
-    if (isResizingTop.current) {
-      topPosition.current = event.pageY
-      container.style.top = `${topPosition.current}px`
-    } */
   };
 
   const handleMouseDown = (event) => {
     // get reference to container
     const container = containerRef.current;
+
+    // get reference to borders
+    const topBorder = topBorderRef.current;
+    const leftBorder = leftBorderRef.current;
+    const bottomBorder = bottomBorderRef.current;
+    const rightBorder = rightBorderRef.current;
 
     // get positioning of container
     const { top, left, bottom, right } = container.getBoundingClientRect()
@@ -237,6 +276,50 @@ const DrawingSurface = (props) => {
         document.body.style.cursor = "alias";
         break;
     };
+
+    const resizeCurrentCase = checkResizeCurrent();
+
+    switch(resizeCurrentCase) {
+      case resizeCurrent.TOPLEFT:
+        topBorder.style.display = 'block';
+        leftBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        break;
+      case resizeCurrent.BOTTOMRIGHT:
+        topBorder.style.display = 'block';
+        leftBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        break;
+      case resizeCurrent.BOTTOMLEFT:
+        topBorder.style.display = 'block';
+        leftBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        break;
+      case resizeCurrent.TOPRIGHT:
+        topBorder.style.display = 'block';
+        leftBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        break;
+      case resizeCurrent.TOP:
+        topBorder.style.display = 'block';
+        bottomBorder.style.display = 'block';
+        break;
+      case resizeCurrent.LEFT:
+        leftBorder.style.display = 'block';
+        rightBorder.style.display = 'block';
+        break;
+      case resizeCurrent.BOTTOM:
+        topPosition.current = event.pageY - 800
+        container.style.top = `${topPosition.current}px`
+        break;
+      case resizeCurrent.RIGHT:
+        rightBorder.sytle.display = 'block';
+        break;
+    };
   };
 
   const handleMouseUp = (event) => {
@@ -250,6 +333,17 @@ const DrawingSurface = (props) => {
 
     // get reference to container
     const container = containerRef.current;
+
+    // get reference to borders
+    const topBorder = topBorderRef.current;
+    const leftBorder = leftBorderRef.current;
+    const bottomBorder = bottomBorderRef.current;
+    const rightBorder = rightBorderRef.current;
+
+    topBorder.style.display = 'none';
+    leftBorder.style.display = 'none';
+    bottomBorder.style.display = 'none';
+    rightBorder.style.display = 'none';
 
     // get positioning of container
     const { top, left, bottom, right } = container.getBoundingClientRect()
@@ -288,15 +382,21 @@ const DrawingSurface = (props) => {
   };  
 
   useEffect(() => {
-    setWidth(props.width)
-    setHeight(props.height)
+    setWidth(props.width);
+    setHeight(props.height);
 
     const container = containerRef.current;
     const canvas = canvasRef.current;
 
     const parent = container.parentElement;
     
-    const { top, left, bottom, right } = parent.getBoundingClientRect();
+    const parentRect = getBoundingRect(parent);
+
+    const surfaceTop = (parentRect.height - props.height) / 2;
+    const surfaceLeft = (parentRect.width - props.width) / 2;
+
+    setTop(surfaceTop);
+    setLeft(surfaceLeft);
 
     let frameCount = 0
     let animationFrameId
@@ -316,16 +416,24 @@ const DrawingSurface = (props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [draw, isResizing, topPosition])
+  }, [draw, isResizing])
 
   return (
-      <div ref={containerRef} style={{width: width, height: height, position: 'relative'}} className={style.container}>
-          {/*
-          <svg width={width} height={height} className={style.canvas} ref={canvasRef}>
-              <circle cx="0" cy="0" r="100" stroke="green" stroke-width="4" fill="yellow" />
+
+    <div className={style.container} >
+      <svg width='1520px' height='936px' className={style.backgroundCanvas}>
+        <line ref={topBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={top} x2="1520" y2={top} />
+        <line ref={leftBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={left} y1="0" x2={left} y2="936" />
+        <line ref={bottomBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={top + height} x2="1520" y2={top + height} />
+        <line ref={rightBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={left + width} y1="0" x2={left + width} y2="936" />
+      </svg>
+      <div ref={containerRef} className={style.canvasContainer} style={{width: `${width}px`, height: `${height}px`, top: `${top}px`, left: `${left}px`}} >
+          <svg ref={canvasRef} className={style.canvas} sytle={{width: `${width}px`, height: `${height}px`}} >
+              <circle cx="0" cy="0" r="100" stroke="green" strokeWidth="4" fill="yellow" />
           </svg>
-          */}
       </div>
+    </div>
+      
   );
 }
 
