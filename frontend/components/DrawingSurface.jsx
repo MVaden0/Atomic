@@ -1,9 +1,42 @@
 import React, {useRef, useEffect, useState} from 'react'
 import style from '../styles/DrawingSurface.module.css'
 
+
 /*
+ * Enum of states denoting whether a resize event has started.
+ */
+const resizeStart = {
+  TOP: Symbol('top'),
+  LEFT: Symbol('left'),
+  BOTTOM: Symbol('bottom'),
+  RIGHT: Symbol('right'),
+  TOPLEFT: Symbol('topleft'),
+  BOTTOMRIGHT: Symbol('bottomright'),
+  BOTTOMLEFT: Symbol('bottomleft'),
+  TOPRIGHT: Symbol('topright'),
+  NONE: Symbol('none')
+};
+
+/*
+ * Enum of states denoting whether a resize event is currently happening.
+ */
+const resizeCurrent = {
+  TOP: Symbol('top'),
+  LEFT: Symbol('left'),
+  BOTTOM: Symbol('bottom'),
+  RIGHT: Symbol('right'),
+  TOPLEFT: Symbol('topleft'),
+  BOTTOMRIGHT: Symbol('bottomright'),
+  BOTTOMLEFT: Symbol('bottomleft'),
+  TOPRIGHT: Symbol('topright'),
+};
+
+/**
  * Wrapper for the 'getBoundingClientRect' method that returns an object-wrapped
- * container for the data.
+ * container for the data. Returns, height, width, top, left, bottom, and right 
+ * of element.
+ * @param   {object}  element  DOM element to get rect of.
+ * @return  {object}           Object containing wrapped data.
  */
 const getBoundingRect = (element) => {
   const {top, left, bottom, right, height, width} = element.getBoundingClientRect();
@@ -18,28 +51,108 @@ const getBoundingRect = (element) => {
   };
 };
 
-// resize status enums
-const resizeStart = {
-  TOP: Symbol('top'),
-  LEFT: Symbol('left'),
-  BOTTOM: Symbol('bottom'),
-  RIGHT: Symbol('right'),
-  TOPLEFT: Symbol('topleft'),
-  BOTTOMRIGHT: Symbol('bottomright'),
-  BOTTOMLEFT: Symbol('bottomleft'),
-  TOPRIGHT: Symbol('topright'),
-  NONE: Symbol('none')
+/**
+ * Checks if mouse position is close to a given edge.
+ * @param    {double}  pos     Mouse position.
+ * @param    {double}  bounds  Boundary of edge to check.
+ * @param    {double}  offset  Offset area to check in either direction from bounds.
+ * @returns  {boolean}         Boolean denoting if the edge condition is met.
+ */
+const checkEdge = (pos, bounds, offset) => {
+  return pos < bounds + offset && pos > bounds - offset;
 };
 
-const resizeCurrent = {
-  TOP: Symbol('top'),
-  LEFT: Symbol('left'),
-  BOTTOM: Symbol('bottom'),
-  RIGHT: Symbol('right'),
-  TOPLEFT: Symbol('topleft'),
-  BOTTOMRIGHT: Symbol('bottomright'),
-  BOTTOMLEFT: Symbol('bottomleft'),
-  TOPRIGHT: Symbol('topright'),
+/**
+ * Checks if mouse position is close to a given corner.
+ * @param    {double}  xPos     X position of mouse.
+ * @param    {double}  yPos     Y position of mouse.
+ * @param    {double}  xBounds  Bounds to check on x axis. 
+ * @param    {double}  yBounds  Bounds to check on y axis.
+ * @param    {double}  offset   Offset area to check in either direction from both bounds.
+ * @returns  {boolean}          Booleean denoting whether the corner condition is met.
+ */
+const checkCorner = (xPos, yPos, xBounds, yBounds, offset) => {
+  return xPos < xBounds + offset && xPos > xBounds - offset && yPos < yBounds + offset && yPos > yBounds - offset;
+};
+
+/**
+ * Checks if a resize event has started on any corner or edge.
+ * @param    {Event}       event             Event target.
+ * @param    {double}      top               Top bounds to check.
+ * @param    {double}      left              Left bounds to check.
+ * @param    {double}      bottom            Bottom bounds to check. 
+ * @param    {double}      right             Right bounds to check.
+ * @param    {double}      offset            Offset area to check in either directions from each bound.
+ * @param    {ReactState}  isResizingTop     React state which denotes if resize event is happening from top.
+ * @param    {ReactState}  isResizingLeft    React state which denotes if resize event is happening from left.
+ * @param    {ReactState}  isResizingBottom  React state which denotes if resize event is happening from bottom.
+ * @param    {ReactState}  isResizingRight   React state which denotes if resize event is happening from right.
+ * @returns  {state}                         State denoting which resize event is starting.
+ */
+const checkResizeStart = (event, top, left, bottom, right, offset, isResizingTop, isResizingLeft, isResizingBottom, isResizingRight) => {
+  // change cursor based on position
+  if (checkCorner(event.pageX, event.pageY, left, top, offset) && !isResizingTop.current && !isResizingLeft.current) {                // top left corner
+    return resizeStart.TOPLEFT;
+  } 
+  else if (checkCorner(event.pageX, event.pageY, right, bottom, offset) && !isResizingBottom.current && !isResizingRight.current) {   // bottom right corner
+    return resizeStart.BOTTOMRIGHT;
+  }
+  else if (checkCorner(event.pageX, event.pageY, left, bottom, offset) && !isResizingBottom.current && !isResizingLeft.current) {     // bottom left corner
+    return resizeStart.BOTTOMLEFT;
+  } 
+  else if (checkCorner(event.pageX, event.pageY, right, top, offset) && !isResizingTop.current && !isResizingRight.current) {         // top right corner
+    return resizeStart.TOPRIGHT;
+  }
+  else if (checkEdge(event.pageY, top, offset) && !isResizingTop.current) {                                                          // top edge
+    return resizeStart.TOP;
+  }
+  else if (checkEdge(event.pageX, left, offset) && !isResizingLeft.current) {                                                        // left edge
+    return resizeStart.LEFT;
+  }
+  else if (checkEdge(event.pageY, bottom, offset) && !isResizingBottom.current) {                                                    // bottom edge
+    return resizeStart.BOTTOM;
+  }
+  else if (checkEdge(event.pageX, right, offset) && !isResizingRight.current) {                                                      // right edge
+    return resizeStart.RIGHT;
+  }
+  else if (!isResizingTop.current && !isResizingLeft.current && !isResizingBottom.current && !isResizingRight.current) {             // no edge or corner
+    return resizeStart.NONE;
+  };
+};
+
+/**
+ * Checks if a resize event is currently happening.
+ * @param    {ReactState}  isResizingTop     React state which denotes if resize event is happening from top.
+ * @param    {ReactState}  isResizingLeft    React state which denotes if resize event is happening from left.
+ * @param    {ReactState}  isResizingBottom  React state which denotes if resize event is happening from bottom.
+ * @param    {ReactState}  isResizingRight   React state which denotes if resize event is happening from right.
+ * @returns  {state}                         State denoting which resize event is currently happening.
+ */
+const checkResizeCurrent = (isResizingTop, isResizingLeft, isResizingBottom, isResizingRight) => {
+  if (isResizingTop.current && isResizingLeft.current) {              // top left corner
+    return resizeCurrent.TOPLEFT;
+  } 
+  else if (isResizingBottom.current && isResizingRight.current) {     // bottom right corner
+    return resizeCurrent.BOTTOMRIGHT;
+  }
+  else if (isResizingBottom.current && isResizingLeft.current) {      // bottom left corner
+    return resizeCurrent.BOTTOMLEFT;
+  } 
+  else if (isResizingTop.current && isResizingRight.current) {        // top right corner
+    return resizeCurrent.TOPRIGHT;
+  }
+  else if (isResizingTop.current) {                                   // top edge
+    return resizeCurrent.TOP;
+  }
+  else if (isResizingLeft.current) {                                  // left edge
+    return resizeCurrent.LEFT;
+  }
+  else if (isResizingBottom.current) {                                // bottom edge
+    return resizeCurrent.BOTTOM;
+  }
+  else if (isResizingRight.current) {                                 // right edge
+    return resizeCurrent.RIGHT;
+  };
 };
 
 
@@ -47,9 +160,12 @@ const DrawingSurface = (props) => {
   // props
   const { draw, ...rest } = props;
 
+  // params
+  const minWidth = useRef(100);
+  const minHeight = useRef(100);
+
   // DOM refs
   const containerRef = useRef(null);
-  
   const canvasRef = useRef(null);
 
   const topBorderRef = useRef(false);
@@ -57,7 +173,7 @@ const DrawingSurface = (props) => {
   const bottomBorderRef = useRef(false);
   const rightBorderRef = useRef(false);
 
-  // resizing status
+  // resizing status    
   const isResizingTop = useRef(false);
   const isResizingLeft = useRef(false);
   const isResizingBottom = useRef(false);
@@ -69,73 +185,6 @@ const DrawingSurface = (props) => {
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
 
-  const checkEdge = (pos, bounds, offset) => {
-    return pos < bounds + offset && pos > bounds - offset;
-  };
-
-  const checkCorner = (xPos, yPos, xBounds, yBounds, offset) => {
-    return xPos < xBounds + offset && xPos > xBounds - offset && yPos < yBounds + offset && yPos > yBounds - offset;
-  };
-
-  const checkResizeStart = (event, top, left, bottom, right, offset) => {
-    // change cursor based on position
-    if (checkCorner(event.pageX, event.pageY, left, top, 20) && !isResizingTop.current && !isResizingLeft.current) {            // top left corner
-      return resizeStart.TOPLEFT;
-    } 
-    else if (checkCorner(event.pageX, event.pageY, right, bottom, 20) && !isResizingBottom.current && !isResizingRight.current) {    // bottom right corner
-      return resizeStart.BOTTOMRIGHT;
-    }
-    else if (checkCorner(event.pageX, event.pageY, left, bottom, 20) && !isResizingBottom.current && !isResizingLeft.current) {     // bottom left corner
-      return resizeStart.BOTTOMLEFT;
-    } 
-    else if (checkCorner(event.pageX, event.pageY, right, top, 20) && !isResizingTop.current && !isResizingRight.current) {       // top right corner
-      return resizeStart.TOPRIGHT;
-    }
-    else if (checkEdge(event.pageY, top, 20) && !isResizingTop.current) {                             // top edge
-      return resizeStart.TOP;
-    }
-    else if (checkEdge(event.pageX, left, 20) && !isResizingLeft.current) {                            // left edge
-      return resizeStart.LEFT;
-    }
-    else if (checkEdge(event.pageY, bottom, 20) && !isResizingBottom.current) {                          // bottom edge
-      return resizeStart.BOTTOM;
-    }
-    else if (checkEdge(event.pageX, right, 20) && !isResizingRight.current) {                           // right edge
-      return resizeStart.RIGHT;
-    }
-    else if (!isResizingTop.current && !isResizingLeft.current && !isResizingBottom.current && !isResizingRight.current) {                                                                      // no edge or corner
-      return resizeStart.NONE;
-    };
-  };
-
-  const checkResizeCurrent = () => {
-    // change cursor based on position
-    if (isResizingTop.current && isResizingLeft.current) {            // top left corner
-      return resizeCurrent.TOPLEFT;
-    } 
-    else if (isResizingBottom.current && isResizingRight.current) {    // bottom right corner
-      return resizeCurrent.BOTTOMRIGHT;
-    }
-    else if (isResizingBottom.current && isResizingLeft.current) {     // bottom left corner
-      return resizeCurrent.BOTTOMLEFT;
-    } 
-    else if (isResizingTop.current && isResizingRight.current) {       // top right corner
-      return resizeCurrent.TOPRIGHT;
-    }
-    else if (isResizingTop.current) {                             // top edge
-      return resizeCurrent.TOP;
-    }
-    else if (isResizingLeft.current) {                            // left edge
-      return resizeCurrent.LEFT;
-    }
-    else if (isResizingBottom.current) {                          // bottom edge
-      return resizeCurrent.BOTTOM;
-    }
-    else if (isResizingRight.current) {                           // right edge
-      return resizeCurrent.RIGHT;
-    };
-  };
-
   const handleMouseMove = (event) => {
     // get reference to container
     const container = containerRef.current;
@@ -146,12 +195,22 @@ const DrawingSurface = (props) => {
     const bottomBorder = bottomBorderRef.current;
     const rightBorder = rightBorderRef.current;
 
-    alert(typeof container)
-
     // get positioning of container
-    const { top, left, bottom, right } = container.getBoundingClientRect()
+    const containerRect = getBoundingRect(container);
 
-    const resizeStartCase = checkResizeStart(event, top, left, bottom, right, 20);
+    // compute start case
+    const resizeStartCase = checkResizeStart(
+      event, 
+      containerRect.top, 
+      containerRect.left, 
+      containerRect.bottom, 
+      containerRect.right, 
+      20, 
+      isResizingTop, 
+      isResizingLeft, 
+      isResizingBottom, 
+      isResizingRight
+    );
 
     switch(resizeStartCase) {
       case resizeStart.TOPLEFT:
@@ -183,7 +242,13 @@ const DrawingSurface = (props) => {
         break;
     };
 
-    const resizeCurrentCase = checkResizeCurrent();
+    // compute current case
+    const resizeCurrentCase = checkResizeCurrent(
+      isResizingTop, 
+      isResizingLeft, 
+      isResizingBottom, 
+      isResizingRight
+    );
 
     switch(resizeCurrentCase) {
       case resizeCurrent.TOPLEFT:
@@ -191,10 +256,17 @@ const DrawingSurface = (props) => {
         leftBorder.style.display = 'block';
         bottomBorder.style.display = 'block';
         rightBorder.style.display = 'block';
-        setTop(event.pageY);
-        setHeight(800 - ((event.pageY - 68) * 2));
-        setLeft(event.pageX - 400);
-        setWidth(800 - ((event.pageX - 760) * 2));
+
+        if (800 - (event.pageX - 760) * 2 >= minWidth.current) {
+          setLeft(event.pageX - 400);
+          setWidth(800 - ((event.pageX - 760) * 2));
+        };
+        
+        if (800 - ((event.pageY - 68) * 2) >= minHeight.current) {
+          setTop(event.pageY);
+          setHeight(800 - ((event.pageY - 68) * 2));
+        };
+
         break;
       case resizeCurrent.BOTTOMRIGHT:
         break;
@@ -205,14 +277,22 @@ const DrawingSurface = (props) => {
       case resizeCurrent.TOP:
         topBorder.style.display = 'block';
         bottomBorder.style.display = 'block';
-        setTop(event.pageY);
-        setHeight(800 - ((event.pageY - 68) * 2));
+
+        if (800 - ((event.pageY - 68) * 2) >= minHeight.current) {
+          setTop(event.pageY);
+          setHeight(800 - ((event.pageY - 68) * 2));
+        };
+
         break;
       case resizeCurrent.LEFT:
         leftBorder.style.display = 'block';
         rightBorder.style.display = 'block';
-        setLeft(event.pageX - 400);
-        setWidth(800 - ((event.pageX - 760) * 2));
+
+        if (800 - (event.pageX - 760) * 2 >= minWidth.current) {
+          setLeft(event.pageX - 400);
+          setWidth(800 - ((event.pageX - 760) * 2));
+        };
+
         break;
       case resizeCurrent.BOTTOM:
         break;
@@ -232,9 +312,21 @@ const DrawingSurface = (props) => {
     const rightBorder = rightBorderRef.current;
 
     // get positioning of container
-    const { top, left, bottom, right } = container.getBoundingClientRect()
+    const containerRect = getBoundingRect(container);
 
-    const resizeStartCase = checkResizeStart(event, top, left, bottom, right, 20);
+    // compute start case
+    const resizeStartCase = checkResizeStart(
+      event, 
+      containerRect.top, 
+      containerRect.left, 
+      containerRect.bottom, 
+      containerRect.right, 
+      20, 
+      isResizingTop, 
+      isResizingLeft, 
+      isResizingBottom, 
+      isResizingRight
+    );
 
     switch(resizeStartCase) {
       case resizeStart.TOPLEFT:
@@ -278,7 +370,13 @@ const DrawingSurface = (props) => {
         break;
     };
 
-    const resizeCurrentCase = checkResizeCurrent();
+    // compute current case
+    const resizeCurrentCase = checkResizeCurrent(
+      isResizingTop, 
+      isResizingLeft, 
+      isResizingBottom, 
+      isResizingRight
+    );
 
     switch(resizeCurrentCase) {
       case resizeCurrent.TOPLEFT:
@@ -339,15 +437,28 @@ const DrawingSurface = (props) => {
     const bottomBorder = bottomBorderRef.current;
     const rightBorder = rightBorderRef.current;
 
+    // reset all border displays
     topBorder.style.display = 'none';
     leftBorder.style.display = 'none';
     bottomBorder.style.display = 'none';
     rightBorder.style.display = 'none';
 
     // get positioning of container
-    const { top, left, bottom, right } = container.getBoundingClientRect()
+    const containerRect = getBoundingRect(container);
 
-    const resizeStartCase = checkResizeStart(event, top, left, bottom, right, 20);
+    // compute start case
+    const resizeStartCase = checkResizeStart(
+      event, 
+      containerRect.top, 
+      containerRect.left, 
+      containerRect.bottom, 
+      containerRect.right, 
+      20, 
+      isResizingTop, 
+      isResizingLeft, 
+      isResizingBottom, 
+      isResizingRight
+    );
 
     switch(resizeStartCase) {
       case resizeStart.TOPLEFT:
@@ -388,7 +499,6 @@ const DrawingSurface = (props) => {
     const canvas = canvasRef.current;
 
     const parent = container.parentElement;
-    
     const parentRect = getBoundingRect(parent);
 
     const surfaceTop = (parentRect.height - props.height) / 2;
