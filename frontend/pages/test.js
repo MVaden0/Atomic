@@ -2,7 +2,11 @@ import style from '../styles/Test.module.css'
 import { useRef, useEffect, useState} from 'react'
 
 import TextField from '../components/TextField';
+import DrawingSurface from '../components/DrawingSurface';
 
+const draw = (canvas, framecount) => {
+  
+};
 
 export default function Test() {
 const [name, setName] = useState("circle");
@@ -41,7 +45,7 @@ const [name, setName] = useState("circle");
                     type="text"
                     value={name}
                     onChange={(e) => handleChange(e.target.value)}
-                    spellcheck="false"
+                    spellCheck="false"
                 />
             </div>
             <div className={style.testSubtitle}>
@@ -56,8 +60,7 @@ const [name, setName] = useState("circle");
 
         </div>
         <div style={{ backgroundColor: '#1a1a1a', width: '70vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <div style={{ backgroundColor: '#9CC4B2', width: '950px', height: '700px', borderRadius: '2rem'}}>
-            </div>
+            <DrawingSurface  draw={draw} width='800px' height='800px' />
         </div>
     </div>
   );
