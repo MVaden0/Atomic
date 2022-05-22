@@ -1,69 +1,73 @@
 import React, {useRef, useEffect, useState} from 'react'
 import style from '../styles/DrawingSurface.module.css'
 
-const DrawingSurface = (props) => {
-  
-  const { draw, ...rest } = props
+/*
+ * Wrapper for the 'getBoundingClientRect' method that returns an object-wrapped
+ * container for the data.
+ */
+const getBoundingRect = (element) => {
+  const {top, left, bottom, right, height, width} = element.getBoundingClientRect();
 
-  const containerRef = useRef(null)
-  const canvasRef = useRef(null)
+  return {
+    top: top,
+    left: left,
+    bottom: bottom,
+    right: right,
+    height: height,
+    width: width
+  };
+};
+
+// resize status enums
+const resizeStart = {
+  TOP: Symbol('top'),
+  LEFT: Symbol('left'),
+  BOTTOM: Symbol('bottom'),
+  RIGHT: Symbol('right'),
+  TOPLEFT: Symbol('topleft'),
+  BOTTOMRIGHT: Symbol('bottomright'),
+  BOTTOMLEFT: Symbol('bottomleft'),
+  TOPRIGHT: Symbol('topright'),
+  NONE: Symbol('none')
+};
+
+const resizeCurrent = {
+  TOP: Symbol('top'),
+  LEFT: Symbol('left'),
+  BOTTOM: Symbol('bottom'),
+  RIGHT: Symbol('right'),
+  TOPLEFT: Symbol('topleft'),
+  BOTTOMRIGHT: Symbol('bottomright'),
+  BOTTOMLEFT: Symbol('bottomleft'),
+  TOPRIGHT: Symbol('topright'),
+};
+
+
+const DrawingSurface = (props) => {
+  // props
+  const { draw, ...rest } = props;
+
+  // DOM refs
+  const containerRef = useRef(null);
+  
+  const canvasRef = useRef(null);
 
   const topBorderRef = useRef(false);
   const leftBorderRef = useRef(false);
   const bottomBorderRef = useRef(false);
   const rightBorderRef = useRef(false);
 
-  const isResizing = useRef(false);
+  // resizing status
   const isResizingTop = useRef(false);
   const isResizingLeft = useRef(false);
   const isResizingBottom = useRef(false);
   const isResizingRight = useRef(false);
-
-  const resizeStart = {
-    TOP: Symbol('top'),
-    LEFT: Symbol('left'),
-    BOTTOM: Symbol('bottom'),
-    RIGHT: Symbol('right'),
-    TOPLEFT: Symbol('topleft'),
-    BOTTOMRIGHT: Symbol('bottomright'),
-    BOTTOMLEFT: Symbol('bottomleft'),
-    TOPRIGHT: Symbol('topright'),
-    NONE: Symbol('none')
-  };
-
-  const resizeCurrent = {
-    TOP: Symbol('top'),
-    LEFT: Symbol('left'),
-    BOTTOM: Symbol('bottom'),
-    RIGHT: Symbol('right'),
-    TOPLEFT: Symbol('topleft'),
-    BOTTOMRIGHT: Symbol('bottomright'),
-    BOTTOMLEFT: Symbol('bottomleft'),
-    TOPRIGHT: Symbol('topright'),
-  };
   
-  //const topPosition = useRef(0);
-  const leftPosition = useRef(0);
-  const bottomPosition = useRef(0);
-  const rightPosition = useRef(0);
-
+  // state
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
-
-  const getBoundingRect = (element) => {
-    const {top, left, bottom, right, height, width} = element.getBoundingClientRect();
-
-    return {
-      top: top,
-      left: left,
-      bottom: bottom,
-      right: right,
-      height: height,
-      width: width
-    }
-  }
 
   const checkEdge = (pos, bounds, offset) => {
     return pos < bounds + offset && pos > bounds - offset;
@@ -142,6 +146,8 @@ const DrawingSurface = (props) => {
     const bottomBorder = bottomBorderRef.current;
     const rightBorder = rightBorderRef.current;
 
+    alert(typeof container)
+
     // get positioning of container
     const { top, left, bottom, right } = container.getBoundingClientRect()
 
@@ -209,13 +215,8 @@ const DrawingSurface = (props) => {
         setWidth(800 - ((event.pageX - 760) * 2));
         break;
       case resizeCurrent.BOTTOM:
-        topPosition.current = event.pageY - 800
-        container.style.top = `${topPosition.current}px`
         break;
       case resizeCurrent.RIGHT:
-        rightBorder.style.display = 'block';
-        leftPosition.current = event.pageX - 1200
-        container.style.left = `${leftPosition.current}px`
         break;
     };
   };
@@ -324,8 +325,6 @@ const DrawingSurface = (props) => {
 
   const handleMouseUp = (event) => {
     // reset all states for resizing
-    isResizing.current = false;
-
     isResizingTop.current = false;
     isResizingLeft.current = false;
     isResizingBottom.current = false;
@@ -416,7 +415,7 @@ const DrawingSurface = (props) => {
     return () => {
       window.cancelAnimationFrame(animationFrameId)
     }
-  }, [draw, isResizing])
+  }, [draw])
 
   return (
 
