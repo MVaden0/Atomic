@@ -1,6 +1,8 @@
 import style from '../styles/Test.module.css'
 import { useRef, useEffect, useState} from 'react'
 
+import TextField from '../components/TextField';
+
 
 export default function Test() {
 const [name, setName] = useState("circle");
@@ -12,7 +14,7 @@ const [name, setName] = useState("circle");
 
   return (
     <div style={{backgroundColor: '#1a1a1a', width: '100vw', height: '100vh', display: 'flex'}}>
-        <div style={{ backgroundColor: '#1a1a1a', width: '15vw', height: '100vh', borderRight: '1px solid #f8edd6'}}>
+        <div style={{ backgroundColor: '#1a1a1a', width: '200px', height: '100vh', borderRight: '1px solid #f8edd6'}}>
             <div className={style.testText}>
                 GRID
             </div>
@@ -32,7 +34,7 @@ const [name, setName] = useState("circle");
                 button
             </div>
         </div>
-        <div style={{ backgroundColor: '#1a1a1a', width: '15vw', height: '100vh', borderRight: '1px solid #f8edd6'}}>
+        <div style={{ backgroundColor: '#1a1a1a', width: '200px', height: '100vh', borderRight: '1px solid #f8edd6'}}>
             <div className={style.testTitle}>
                 <input
                     className={style.testInput}
@@ -46,25 +48,10 @@ const [name, setName] = useState("circle");
                 Circle
             </div>
             <div className={style.testGrid}>
-                <div>
-                    <label style={{color: '#ffffff'}} htmlFor="x" >x</label>
-                    <input style={{width: '45px'}} type="text" name="x" id="x"/>
-                </div>
-                
-                <div>
-                    <label style={{color: '#ffffff'}} htmlFor="y" >y</label>
-                    <input style={{width: '45px'}} type="text" name="y" id="y"/>
-                </div>
-                
-                <div>
-                    <label style={{color: '#ffffff'}} htmlFor="w" >w</label>
-                    <input style={{width: '45px'}} type="text" name="w" id="w"/>
-                </div>
-
-                <div>
-                    <label style={{color: '#ffffff'}} htmlFor="h" >h</label>
-                    <input style={{width: '45px'}} type="text" name="h" id="h"/>
-                </div>
+                <TextField name="x" color='#f8edd6' backgroundColor='#332F2E' />
+                <TextField name="y" color='#f8edd6' backgroundColor='#332F2E' />
+                <TextField name="w" color='#f8edd6' backgroundColor='#332F2E' />
+                <TextField name="h" color='#f8edd6' backgroundColor='#332F2E' />
             </div>
 
         </div>
