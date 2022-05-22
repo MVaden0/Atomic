@@ -83,75 +83,113 @@ const checkCorner = (xPos, yPos, xBounds, yBounds, offset) => {
  * @param    {double}      bottom            Bottom bounds to check. 
  * @param    {double}      right             Right bounds to check.
  * @param    {double}      offset            Offset area to check in either directions from each bound.
- * @param    {ReactState}  isResizingTop     React state which denotes if resize event is happening from top.
- * @param    {ReactState}  isResizingLeft    React state which denotes if resize event is happening from left.
- * @param    {ReactState}  isResizingBottom  React state which denotes if resize event is happening from bottom.
- * @param    {ReactState}  isResizingRight   React state which denotes if resize event is happening from right.
+ * @param    {ReactState}  resizeTop     React state which denotes if resize event is happening from top.
+ * @param    {ReactState}  resizeLeft    React state which denotes if resize event is happening from left.
+ * @param    {ReactState}  resizeBottom  React state which denotes if resize event is happening from bottom.
+ * @param    {ReactState}  resizeRight   React state which denotes if resize event is happening from right.
  * @returns  {state}                         State denoting which resize event is starting.
  */
-const checkResizeStart = (event, top, left, bottom, right, offset, isResizingTop, isResizingLeft, isResizingBottom, isResizingRight) => {
+const checkResizeStart = (event, top, left, bottom, right, offset, resizeTop, resizeLeft, resizeBottom, resizeRight) => {
   // change cursor based on position
-  if (checkCorner(event.pageX, event.pageY, left, top, offset) && !isResizingTop.current && !isResizingLeft.current) {                // top left corner
+  if (checkCorner(event.pageX, event.pageY, left, top, offset) && !resizeTop.current && !resizeLeft.current) {                // top left corner
     return resizeStart.TOPLEFT;
   } 
-  else if (checkCorner(event.pageX, event.pageY, right, bottom, offset) && !isResizingBottom.current && !isResizingRight.current) {   // bottom right corner
+  else if (checkCorner(event.pageX, event.pageY, right, bottom, offset) && !resizeBottom.current && !resizeRight.current) {   // bottom right corner
     return resizeStart.BOTTOMRIGHT;
   }
-  else if (checkCorner(event.pageX, event.pageY, left, bottom, offset) && !isResizingBottom.current && !isResizingLeft.current) {     // bottom left corner
+  else if (checkCorner(event.pageX, event.pageY, left, bottom, offset) && !resizeBottom.current && !resizeLeft.current) {     // bottom left corner
     return resizeStart.BOTTOMLEFT;
   } 
-  else if (checkCorner(event.pageX, event.pageY, right, top, offset) && !isResizingTop.current && !isResizingRight.current) {         // top right corner
+  else if (checkCorner(event.pageX, event.pageY, right, top, offset) && !resizeTop.current && !resizeRight.current) {         // top right corner
     return resizeStart.TOPRIGHT;
   }
-  else if (checkEdge(event.pageY, top, offset) && !isResizingTop.current) {                                                          // top edge
+  else if (checkEdge(event.pageY, top, offset) && !resizeTop.current) {                                                          // top edge
     return resizeStart.TOP;
   }
-  else if (checkEdge(event.pageX, left, offset) && !isResizingLeft.current) {                                                        // left edge
+  else if (checkEdge(event.pageX, left, offset) && !resizeLeft.current) {                                                        // left edge
     return resizeStart.LEFT;
   }
-  else if (checkEdge(event.pageY, bottom, offset) && !isResizingBottom.current) {                                                    // bottom edge
+  else if (checkEdge(event.pageY, bottom, offset) && !resizeBottom.current) {                                                    // bottom edge
     return resizeStart.BOTTOM;
   }
-  else if (checkEdge(event.pageX, right, offset) && !isResizingRight.current) {                                                      // right edge
+  else if (checkEdge(event.pageX, right, offset) && !resizeRight.current) {                                                      // right edge
     return resizeStart.RIGHT;
   }
-  else if (!isResizingTop.current && !isResizingLeft.current && !isResizingBottom.current && !isResizingRight.current) {             // no edge or corner
+  else if (!resizeTop.current && !resizeLeft.current && !resizeBottom.current && !resizeRight.current) {             // no edge or corner
     return resizeStart.NONE;
   };
 };
 
 /**
  * Checks if a resize event is currently happening.
- * @param    {ReactState}  isResizingTop     React state which denotes if resize event is happening from top.
- * @param    {ReactState}  isResizingLeft    React state which denotes if resize event is happening from left.
- * @param    {ReactState}  isResizingBottom  React state which denotes if resize event is happening from bottom.
- * @param    {ReactState}  isResizingRight   React state which denotes if resize event is happening from right.
+ * @param    {ReactState}  resizeTop     React state which denotes if resize event is happening from top.
+ * @param    {ReactState}  resizeLeft    React state which denotes if resize event is happening from left.
+ * @param    {ReactState}  resizeBottom  React state which denotes if resize event is happening from bottom.
+ * @param    {ReactState}  resizeRight   React state which denotes if resize event is happening from right.
  * @returns  {state}                         State denoting which resize event is currently happening.
  */
-const checkResizeCurrent = (isResizingTop, isResizingLeft, isResizingBottom, isResizingRight) => {
-  if (isResizingTop.current && isResizingLeft.current) {              // top left corner
+const checkResizeCurrent = (resizeTop, resizeLeft, resizeBottom, resizeRight) => {
+  if (resizeTop.current && resizeLeft.current) {              // top left corner
     return resizeCurrent.TOPLEFT;
   } 
-  else if (isResizingBottom.current && isResizingRight.current) {     // bottom right corner
+  else if (resizeBottom.current && resizeRight.current) {     // bottom right corner
     return resizeCurrent.BOTTOMRIGHT;
   }
-  else if (isResizingBottom.current && isResizingLeft.current) {      // bottom left corner
+  else if (resizeBottom.current && resizeLeft.current) {      // bottom left corner
     return resizeCurrent.BOTTOMLEFT;
   } 
-  else if (isResizingTop.current && isResizingRight.current) {        // top right corner
+  else if (resizeTop.current && resizeRight.current) {        // top right corner
     return resizeCurrent.TOPRIGHT;
   }
-  else if (isResizingTop.current) {                                   // top edge
+  else if (resizeTop.current) {                                   // top edge
     return resizeCurrent.TOP;
   }
-  else if (isResizingLeft.current) {                                  // left edge
+  else if (resizeLeft.current) {                                  // left edge
     return resizeCurrent.LEFT;
   }
-  else if (isResizingBottom.current) {                                // bottom edge
+  else if (resizeBottom.current) {                                // bottom edge
     return resizeCurrent.BOTTOM;
   }
-  else if (isResizingRight.current) {                                 // right edge
+  else if (resizeRight.current) {                                 // right edge
     return resizeCurrent.RIGHT;
+  };
+};
+
+const computeMouseType = (resizeStartCase) => {
+  switch(resizeStartCase) {
+    case resizeStart.TOPLEFT:
+      document.body.style.cursor = "nwse-resize";
+      break;
+    case resizeStart.BOTTOMRIGHT:
+      document.body.style.cursor = "nwse-resize";
+      break;
+    case resizeStart.BOTTOMLEFT:
+      document.body.style.cursor = "nesw-resize";
+      break;
+    case resizeStart.TOPRIGHT:
+      document.body.style.cursor = "nesw-resize";
+      break;
+    case resizeStart.TOP:
+      document.body.style.cursor = "ns-resize";
+      break;
+    case resizeStart.LEFT:
+      document.body.style.cursor = "ew-resize";
+      break;
+    case resizeStart.BOTTOM:
+      document.body.style.cursor = "ns-resize";
+      break;
+    case resizeStart.RIGHT:
+      document.body.style.cursor = "ew-resize";
+      break;
+    case resizeStart.NONE:
+      document.body.style.cursor = "alias";
+      break;
+  };
+}
+
+const toggleResize = (toggle) => {
+  for (let i = 1; i < arguments.length - 1; i++) {
+    arguments[i].current = toggle;
   };
 };
 
@@ -174,16 +212,20 @@ const DrawingSurface = (props) => {
   const rightBorderRef = useRef(false);
 
   // resizing status    
-  const isResizingTop = useRef(false);
-  const isResizingLeft = useRef(false);
-  const isResizingBottom = useRef(false);
-  const isResizingRight = useRef(false);
+  const resizeTop = useRef(false);
+  const resizeLeft = useRef(false);
+  const resizeBottom = useRef(false);
+  const resizeRight = useRef(false);
   
-  // state
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
+  const width = useRef(props.width);
+  const height = useRef(props.height);
+  const left = useRef(0);
+  const top = useRef(0);
+
+  const [widthState, setWidthState] = useState(width.current);
+  const [heightState, setHeightState] = useState(height.current);
+  const [leftState, setLeftState] = useState(left.current);
+  const [topState, setTopState] = useState(top.current);
 
   const handleMouseMove = (event) => {
     // get reference to container
@@ -198,7 +240,10 @@ const DrawingSurface = (props) => {
     // get positioning of container
     const containerRect = getBoundingRect(container);
 
-    // compute start case
+    // get reference and container to parent
+    const parent = container.parentElement;
+    const parentRect = getBoundingRect(parent);
+
     const resizeStartCase = checkResizeStart(
       event, 
       containerRect.top, 
@@ -206,65 +251,44 @@ const DrawingSurface = (props) => {
       containerRect.bottom, 
       containerRect.right, 
       20, 
-      isResizingTop, 
-      isResizingLeft, 
-      isResizingBottom, 
-      isResizingRight
+      resizeTop, 
+      resizeLeft, 
+      resizeBottom, 
+      resizeRight
     );
 
-    switch(resizeStartCase) {
-      case resizeStart.TOPLEFT:
-        document.body.style.cursor = "nwse-resize";
-        break;
-      case resizeStart.BOTTOMRIGHT:
-        document.body.style.cursor = "nwse-resize";
-        break;
-      case resizeStart.BOTTOMLEFT:
-        document.body.style.cursor = "nesw-resize";
-        break;
-      case resizeStart.TOPRIGHT:
-        document.body.style.cursor = "nesw-resize";
-        break;
-      case resizeStart.TOP:
-        document.body.style.cursor = "ns-resize";
-        break;
-      case resizeStart.LEFT:
-        document.body.style.cursor = "ew-resize";
-        break;
-      case resizeStart.BOTTOM:
-        document.body.style.cursor = "ns-resize";
-        break;
-      case resizeStart.RIGHT:
-        document.body.style.cursor = "ew-resize";
-        break;
-      case resizeStart.NONE:
-        document.body.style.cursor = "alias";
-        break;
-    };
+    computeMouseType(resizeStartCase);
 
     // compute current case
     const resizeCurrentCase = checkResizeCurrent(
-      isResizingTop, 
-      isResizingLeft, 
-      isResizingBottom, 
-      isResizingRight
+      resizeTop, 
+      resizeLeft, 
+      resizeBottom, 
+      resizeRight
     );
 
     switch(resizeCurrentCase) {
       case resizeCurrent.TOPLEFT:
+        // turn on all borders
         topBorder.style.display = 'block';
         leftBorder.style.display = 'block';
         bottomBorder.style.display = 'block';
         rightBorder.style.display = 'block';
 
-        if (800 - (event.pageX - 760) * 2 >= minWidth.current) {
-          setLeft(event.pageX - 400);
-          setWidth(800 - ((event.pageX - 760) * 2));
+        if (width.current - (event.pageX - containerRect.left) * 2 >= minWidth.current) {
+          left.current = event.pageX - parentRect.left;
+          width.current = width.current - ((event.pageX - containerRect.left) * 2);
+
+          setLeftState(left.current);
+          setWidthState(width.current);
         };
         
-        if (800 - ((event.pageY - 68) * 2) >= minHeight.current) {
-          setTop(event.pageY);
-          setHeight(800 - ((event.pageY - 68) * 2));
+        if (height.current - ((event.pageY - containerRect.top) * 2) >= minHeight.current) {
+          top.current = event.pageY;
+          height.current = height.current - ((event.pageY - containerRect.top) * 2);
+
+          setTopState(top.current);
+          setHeightState(height.current);
         };
 
         break;
@@ -278,9 +302,12 @@ const DrawingSurface = (props) => {
         topBorder.style.display = 'block';
         bottomBorder.style.display = 'block';
 
-        if (800 - ((event.pageY - 68) * 2) >= minHeight.current) {
-          setTop(event.pageY);
-          setHeight(800 - ((event.pageY - 68) * 2));
+        if (height.current - ((event.pageY - containerRect.top) * 2) >= minHeight.current) {
+          top.current = event.pageY;
+          height.current = height.current - ((event.pageY - containerRect.top) * 2);
+
+          setTopState(top.current);
+          setHeightState(height.current);
         };
 
         break;
@@ -288,9 +315,12 @@ const DrawingSurface = (props) => {
         leftBorder.style.display = 'block';
         rightBorder.style.display = 'block';
 
-        if (800 - (event.pageX - 760) * 2 >= minWidth.current) {
-          setLeft(event.pageX - 400);
-          setWidth(800 - ((event.pageX - 760) * 2));
+        if (width.current - (event.pageX - containerRect.left) * 2 >= minWidth.current) {
+          left.current = event.pageX - parentRect.left;
+          width.current = width.current - ((event.pageX - containerRect.left) * 2);
+
+          setLeftState(left.current);
+          setWidthState(width.current);
         };
 
         break;
@@ -314,7 +344,6 @@ const DrawingSurface = (props) => {
     // get positioning of container
     const containerRect = getBoundingRect(container);
 
-    // compute start case
     const resizeStartCase = checkResizeStart(
       event, 
       containerRect.top, 
@@ -322,111 +351,65 @@ const DrawingSurface = (props) => {
       containerRect.bottom, 
       containerRect.right, 
       20, 
-      isResizingTop, 
-      isResizingLeft, 
-      isResizingBottom, 
-      isResizingRight
+      resizeTop, 
+      resizeLeft, 
+      resizeBottom, 
+      resizeRight
     );
+
+    computeMouseType(resizeStartCase);
 
     switch(resizeStartCase) {
       case resizeStart.TOPLEFT:
-        isResizingTop.current = true;
-        isResizingLeft.current = true;
+        //toggleResize(true, resizeTop, resizeLeft);
+        resizeTop.current = true;
+        resizeLeft.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.BOTTOMRIGHT:
-        isResizingBottom.current = true;
-        isResizingRight.current = true;
+        resizeBottom.current = true;
+        resizeRight.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.BOTTOMLEFT:
-        isResizingBottom.current = true;
-        isResizingLeft.current = true;
+        resizeBottom.current = true;
+        resizeLeft.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.TOPRIGHT:
-        isResizingTop.current = true;
-        isResizingRight.current = true;
+        resizeTop.current = true;
+        resizeRight.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.TOP:
-        isResizingTop.current = true;
+        resizeTop.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.LEFT:
-        isResizingLeft.current = true;
+        resizeLeft.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.BOTTOM:
-        isResizingBottom.current = true;
+        resizeBottom.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.RIGHT:
-        isResizingRight.current = true;
+        resizeRight.current = true;
         document.body.style.cursor = "grabbing";
         break;
       case resizeStart.NONE:
         document.body.style.cursor = "alias";
         break;
     };
-
-    // compute current case
-    const resizeCurrentCase = checkResizeCurrent(
-      isResizingTop, 
-      isResizingLeft, 
-      isResizingBottom, 
-      isResizingRight
-    );
-
-    switch(resizeCurrentCase) {
-      case resizeCurrent.TOPLEFT:
-        topBorder.style.display = 'block';
-        leftBorder.style.display = 'block';
-        bottomBorder.style.display = 'block';
-        rightBorder.style.display = 'block';
-        break;
-      case resizeCurrent.BOTTOMRIGHT:
-        topBorder.style.display = 'block';
-        leftBorder.style.display = 'block';
-        bottomBorder.style.display = 'block';
-        rightBorder.style.display = 'block';
-        break;
-      case resizeCurrent.BOTTOMLEFT:
-        topBorder.style.display = 'block';
-        leftBorder.style.display = 'block';
-        bottomBorder.style.display = 'block';
-        rightBorder.style.display = 'block';
-        break;
-      case resizeCurrent.TOPRIGHT:
-        topBorder.style.display = 'block';
-        leftBorder.style.display = 'block';
-        bottomBorder.style.display = 'block';
-        rightBorder.style.display = 'block';
-        break;
-      case resizeCurrent.TOP:
-        topBorder.style.display = 'block';
-        bottomBorder.style.display = 'block';
-        break;
-      case resizeCurrent.LEFT:
-        leftBorder.style.display = 'block';
-        rightBorder.style.display = 'block';
-        break;
-      case resizeCurrent.BOTTOM:
-        topPosition.current = event.pageY - 800
-        container.style.top = `${topPosition.current}px`
-        break;
-      case resizeCurrent.RIGHT:
-        rightBorder.sytle.display = 'block';
-        break;
-    };
+   
   };
 
   const handleMouseUp = (event) => {
     // reset all states for resizing
-    isResizingTop.current = false;
-    isResizingLeft.current = false;
-    isResizingBottom.current = false;
-    isResizingRight.current = false;
+    resizeTop.current = false;
+    resizeLeft.current = false;
+    resizeBottom.current = false;
+    resizeRight.current = false;
 
     // get reference to container
     const container = containerRef.current;
@@ -446,66 +429,56 @@ const DrawingSurface = (props) => {
     // get positioning of container
     const containerRect = getBoundingRect(container);
 
-    // compute start case
-    const resizeStartCase = checkResizeStart(
-      event, 
-      containerRect.top, 
-      containerRect.left, 
-      containerRect.bottom, 
-      containerRect.right, 
-      20, 
-      isResizingTop, 
-      isResizingLeft, 
-      isResizingBottom, 
-      isResizingRight
-    );
-
-    switch(resizeStartCase) {
-      case resizeStart.TOPLEFT:
-        document.body.style.cursor = "nwse-resize";
-        break;
-      case resizeStart.BOTTOMRIGHT:
-        document.body.style.cursor = "nwse-resize";
-        break;
-      case resizeStart.BOTTOMLEFT:
-        document.body.style.cursor = "nesw-resize";
-        break;
-      case resizeStart.TOPRIGHT:
-        document.body.style.cursor = "nesw-resize";
-        break;
-      case resizeStart.TOP:
-        document.body.style.cursor = "ns-resize";
-        break;
-      case resizeStart.LEFT:
-        document.body.style.cursor = "ew-resize";
-        break;
-      case resizeStart.BOTTOM:
-        document.body.style.cursor = "ns-resize";
-        break;
-      case resizeStart.RIGHT:
-        document.body.style.cursor = "ew-resize";
-        break;
-      case resizeStart.NONE:
-        document.body.style.cursor = "alias";
-        break;
-    };
+    
   };  
 
   useEffect(() => {
-    setWidth(props.width);
-    setHeight(props.height);
-
     const container = containerRef.current;
     const canvas = canvasRef.current;
+
+    /* TESTING TESTING TESTING TESTING TESTING TESTING TESTING */
+    const circle = {
+      tag: 'circle-1',
+      type: 'circle',
+      x: 400,
+      y: 400,
+      radius: 100,
+      stroke: 'red',
+      strokeWidth: 4,
+      fill: 'green'
+    }
+
+    let newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    newCircle.setAttribute('cx', circle.x)
+    newCircle.setAttribute('cy', circle.y)
+    newCircle.setAttribute('r', circle.radius)
+    newCircle.setAttribute('stroke', circle.stroke)
+    newCircle.setAttribute('stroke-width', circle.strokeWidth)
+    newCircle.setAttribute('fill', circle.fill)
+
+    canvas.appendChild(newCircle)
+
+    newCircle.addEventListener('click', (event) => {
+      const c = getBoundingRect(newCircle);
+      alert(c.width)
+    })
+
+
+    /* TESTING TESTING TESTING TESTING TESTING TESTING TESTING */
 
     const parent = container.parentElement;
     const parentRect = getBoundingRect(parent);
 
-    const surfaceTop = (parentRect.height - props.height) / 2;
-    const surfaceLeft = (parentRect.width - props.width) / 2;
+    const surfaceTop = (parentRect.height - height.current) / 2;
+    const surfaceLeft = (parentRect.width - width.current) / 2;
 
-    setTop(surfaceTop);
-    setLeft(surfaceLeft);
+    top.current = surfaceTop;
+    left.current = surfaceLeft;
+
+    setWidthState(width.current);
+    setHeightState(height.current);
+    setTopState(top.current);
+    setLeftState(left.current);
 
     let frameCount = 0
     let animationFrameId
@@ -531,14 +504,14 @@ const DrawingSurface = (props) => {
 
     <div className={style.container} >
       <svg width='1520px' height='936px' className={style.backgroundCanvas}>
-        <line ref={topBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={top} x2="1520" y2={top} />
-        <line ref={leftBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={left} y1="0" x2={left} y2="936" />
-        <line ref={bottomBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={top + height} x2="1520" y2={top + height} />
-        <line ref={rightBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={left + width} y1="0" x2={left + width} y2="936" />
+        <line ref={topBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState} x2="1520" y2={topState} />
+        <line ref={leftBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState} y1="0" x2={leftState} y2="936" />
+        <line ref={bottomBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState + heightState} x2="1520" y2={topState + heightState} />
+        <line ref={rightBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState + widthState} y1="0" x2={leftState + widthState} y2="936" />
       </svg>
-      <div ref={containerRef} className={style.canvasContainer} style={{width: `${width}px`, height: `${height}px`, top: `${top}px`, left: `${left}px`}} >
-          <svg ref={canvasRef} className={style.canvas} sytle={{width: `${width}px`, height: `${height}px`}} >
-              <circle cx="0" cy="0" r="100" stroke="green" strokeWidth="4" fill="yellow" />
+      <div ref={containerRef} className={style.canvasContainer} style={{width: `${widthState}px`, height: `${heightState}px`, top: `${topState}px`, left: `${leftState}px`}} >
+          <svg xmlns="http://www.w3.org/2000/svg" ref={canvasRef} className={style.canvas} width={`${widthState}px`} height={`${heightState}px`} >
+              
           </svg>
       </div>
     </div>
