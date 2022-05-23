@@ -67,60 +67,9 @@ const drawData = [
   }
 ];
 
-const drawing = new Dali(drawData);
-
-const circle = (ctx, options) => {
-  const fillColor = options.fillColor || '#ffffff';
-  const strokeColor = options.strokeColor || '#ffffff';
-  const fill = options.fill || false;
-  const stroke = options.stroke || false;
-  const radius = options.radius || 10;
-  const x = options.x || 10;
-  const y = options.y || 10;
-  const lineWidth = options.lineWidth || 2;
-
-  if (fill == true) {
-    ctx.fillStyle = fillColor;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2*Math.PI)
-    ctx.fill()
-  }
-
-  if (stroke == true) {
-    ctx.strokeStyle = strokeColor;
-    ctx.lineWidth = lineWidth;
-    ctx.beginPath();
-    ctx.arc(x, y, radius, 0, 2*Math.PI);
-    ctx.stroke();
-  }
-};
 
 const draw = (ctx, frameCount) => {
-  /*
-  drawData.forEach((element) => {
-    circle(ctx, element);
-  });
-  */
-  drawing.render(ctx, frameCount);
-
-  const test = {
-    tag: 'circle-7',
-    fill: true,
-    fillColor: '#c16e70',
-    radius: 10,
-    x: 330,
-    y: 250
-  }
-
-  const dTheta = frameCount / 80;
-  const dX = Math.cos(dTheta) * 80;
-  const dY = Math.sin(dTheta) * 80;
-
-  ctx.fillStyle = test.fillColor;
-  ctx.beginPath();
-  ctx.arc(250 - dX, 250 - dY, test.radius, 0, 2*Math.PI)
-  ctx.fill()
-
+  
 }
 
 export default function Home() {

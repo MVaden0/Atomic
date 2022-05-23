@@ -1,6 +1,9 @@
 import React, {useRef, useEffect, useState} from 'react'
 import style from '../styles/DrawingSurface.module.css'
 
+import Ellipse from '../components/drawing/Ellipse'
+import Circle from '../components/drawing/Circle'
+
 
 /*
  * Enum of states denoting whether a resize event has started.
@@ -187,13 +190,6 @@ const computeMouseType = (resizeStartCase) => {
   };
 }
 
-const toggleResize = (toggle) => {
-  for (let i = 1; i < arguments.length - 1; i++) {
-    arguments[i].current = toggle;
-  };
-};
-
-
 const DrawingSurface = (props) => {
   // props
   const { draw, ...rest } = props;
@@ -357,7 +353,7 @@ const DrawingSurface = (props) => {
       resizeRight
     );
 
-    computeMouseType(resizeStartCase);
+    //computeMouseType(resizeStartCase);
 
     switch(resizeStartCase) {
       case resizeStart.TOPLEFT:
@@ -437,31 +433,9 @@ const DrawingSurface = (props) => {
     const canvas = canvasRef.current;
 
     /* TESTING TESTING TESTING TESTING TESTING TESTING TESTING */
-    const circle = {
-      tag: 'circle-1',
-      type: 'circle',
-      x: 400,
-      y: 400,
-      radius: 100,
-      stroke: 'red',
-      strokeWidth: 4,
-      fill: 'green'
-    }
+    
 
-    let newCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    newCircle.setAttribute('cx', circle.x)
-    newCircle.setAttribute('cy', circle.y)
-    newCircle.setAttribute('r', circle.radius)
-    newCircle.setAttribute('stroke', circle.stroke)
-    newCircle.setAttribute('stroke-width', circle.strokeWidth)
-    newCircle.setAttribute('fill', circle.fill)
-
-    canvas.appendChild(newCircle)
-
-    newCircle.addEventListener('click', (event) => {
-      const c = getBoundingRect(newCircle);
-      alert(c.width)
-    })
+    //canvas.appendChild(circle)
 
 
     /* TESTING TESTING TESTING TESTING TESTING TESTING TESTING */
@@ -504,14 +478,14 @@ const DrawingSurface = (props) => {
 
     <div className={style.container} >
       <svg width='1520px' height='936px' className={style.backgroundCanvas}>
-        <line ref={topBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState} x2="1520" y2={topState} />
-        <line ref={leftBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState} y1="0" x2={leftState} y2="936" />
-        <line ref={bottomBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState + heightState} x2="1520" y2={topState + heightState} />
-        <line ref={rightBorderRef} style={{display: 'none', stroke: '#AFECE7', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState + widthState} y1="0" x2={leftState + widthState} y2="936" />
+        <line ref={topBorderRef} style={{display: 'none', stroke: '#f8edd6', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState} x2="1520" y2={topState} />
+        <line ref={leftBorderRef} style={{display: 'none', stroke: '#f8edd6', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState} y1="0" x2={leftState} y2="936" />
+        <line ref={bottomBorderRef} style={{display: 'none', stroke: '#f8edd6', strokeWidth:2, strokeDasharray: '5, 5'}} x1='0' y1={topState + heightState} x2="1520" y2={topState + heightState} />
+        <line ref={rightBorderRef} style={{display: 'none', stroke: '#f8edd6', strokeWidth:2, strokeDasharray: '5, 5'}} x1={leftState + widthState} y1="0" x2={leftState + widthState} y2="936" />
       </svg>
       <div ref={containerRef} className={style.canvasContainer} style={{width: `${widthState}px`, height: `${heightState}px`, top: `${topState}px`, left: `${leftState}px`}} >
-          <svg xmlns="http://www.w3.org/2000/svg" ref={canvasRef} className={style.canvas} width={`${widthState}px`} height={`${heightState}px`} >
-              
+          <svg id="surface" xmlns="http://www.w3.org/2000/svg" ref={canvasRef} className={style.canvas} width={`${widthState}px`} height={`${heightState}px`} >
+              <Ellipse cx='400' cy='400' rx='200' ry='200' />
           </svg>
       </div>
     </div>

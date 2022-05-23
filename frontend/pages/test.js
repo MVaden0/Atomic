@@ -4,8 +4,21 @@ import { useRef, useEffect, useState} from 'react'
 import TextField from '../components/TextField';
 import DrawingSurface from '../components/DrawingSurface';
 
+import Dali from '../dali/Dali'
+
+const circle = [
+    {
+        tag: 'circle-1',
+        type: 'circle',
+        x: 400,
+        y: 400,
+        radius: 100,
+        fill: 'blue'
+    }
+]
+
 const draw = (canvas, framecount) => {
-  
+
 };
 
 export default function Test() {
