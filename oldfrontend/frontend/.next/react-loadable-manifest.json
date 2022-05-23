@@ -1,0 +1,8 @@
+{
+  "index.js -> ../components/Background": {
+    "id": "index.js -> ../components/Background",
+    "files": [
+      "static/chunks/components_Background_js.js"
+    ]
+  }
+}
