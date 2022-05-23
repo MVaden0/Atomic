@@ -2,7 +2,7 @@ import style from '../styles/Test.module.css'
 import { useRef, useEffect, useState} from 'react'
 
 import TextField from '../components/TextField';
-import DrawingSurface from '../components/DrawingSurface';
+import DrawingSurface from '../components/drawing/DrawingSurface';
 
 import Dali from '../dali/Dali'
 

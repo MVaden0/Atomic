@@ -80,7 +80,7 @@ const LandingPageNav = () => {
     <nav className={style.navbar}>
         <MenuItem className={dark ? style.navbarAnchorDark : style.navbarAnchor} itemName="about" title="About" />
         <MenuItem className={dark ? style.navbarAnchorDark : style.navbarAnchor} itemName="getStarted" title="Get Started" />
-        <Link href="/test">
+        <Link href="/figureCreator">
           <a>test</a>
         </Link>
     </nav>
