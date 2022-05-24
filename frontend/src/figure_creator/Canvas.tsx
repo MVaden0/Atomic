@@ -24,20 +24,20 @@ export const Canvas: FC<Props> = ({backgroundCanvasWidth, backgroundCanvasHeight
             className={style.container} 
             style={{width: backgroundCanvasWidth, height: backgroundCanvasHeight, backgroundColor: '#1a1a1a'}} >
             <BoundingRect 
-            backgroundCanvasWidth={backgroundCanvasWidth}
-            backgroundCanvasHeight={backgroundCanvasHeight}
-            canvasTop={canvasTop}
-            canvasLeft={canvasLeft}
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-            heightState={heightState} 
-            showTop={true}
-            showLeft={true}
-            showBottom={true}
-            showRight={true} />
+                backgroundCanvasWidth={backgroundCanvasWidth}
+                backgroundCanvasHeight={backgroundCanvasHeight}
+                canvasTop={canvasTop}
+                canvasLeft={canvasLeft}
+                canvasWidth={canvasWidth}
+                canvasHeight={canvasHeight}
+                heightState={heightState} 
+                showTop={true}
+                showLeft={true}
+                showBottom={true}
+                showRight={true} />
             <div 
-            className={style.canvasContainer} 
-            style={{width: `${canvasWidth}px`, height: `${canvasHeight}px`, top: `${canvasTop}px`, left: `${canvasLeft}px`}} >
+                className={style.canvasContainer} 
+                style={{width: `${canvasWidth}px`, height: `${canvasHeight}px`, top: `${canvasTop}px`, left: `${canvasLeft}px`}} >
                 <svg xmlns="http://www.w3.org/2000/svg" className={style.canvas} width={`${canvasWidth}px`} height={`${canvasHeight}px`} >
 
                 </svg>
