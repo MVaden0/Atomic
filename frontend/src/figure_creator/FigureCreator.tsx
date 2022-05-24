@@ -65,19 +65,22 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
             } else 
             if ((r + 500 - o < x) && (x < r + 500 + o) && (y < b + o) && (y > t - o)) {     // right
                 document.body.style.cursor = "ew-resize";
+            } 
+            else {
+                document.body.style.cursor = "alias";
             };
         } else {
             document.body.style.cursor = "grabbing";
-            if (resizingTop.current) {                  // top
+            if (resizingTop.current && y > 0 && y < window.innerHeight - 800) {                  // top
                 setCanvasTop(y);
             };
-            if (resizingLeft.current) {                 // left
+            if (resizingLeft.current && x < window.innerWidth - 800 && x > 500) {                 // left
                 setCanvasLeft(x - 500);
             };
-            if (resizingBottom.current) {               // bottom
+            if (resizingBottom.current && y < window.innerHeight && y > 800) {               // bottom
                 setCanvasTop(y - canvasHeight);
             };
-            if (resizingRight.current) {                // right
+            if (resizingRight.current && x < window.innerWidth && x > 800 + 500) {                // right
                 setCanvasLeft(x - 500 - canvasWidth);
             };
         };
