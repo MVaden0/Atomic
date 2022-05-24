@@ -1,3 +1,9 @@
+
+:global(html),
+:global(body) {
+  background-color: rgb(204, 151, 82);
+}
+
 .App {
   text-align: center;
 }
