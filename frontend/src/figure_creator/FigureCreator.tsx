@@ -27,6 +27,8 @@ interface State {
     canvasTop: number;
     canvasLeft: number;
     offset: number;
+    minW: number;
+    minH: number;
 }
 
 const canvasReducer = (state: State, action: Action) => {
@@ -36,22 +38,26 @@ const canvasReducer = (state: State, action: Action) => {
         case ActionState.RESIZETOP:
             return {
                 ...state,
-                canvasTop: payload.y
+                canvasTop: payload.y,
+                canvasHeight: window.innerHeight - payload.y * 2
             }
         case ActionState.RESIZELEFT:
             return {
                 ...state,
-                canvasLeft: payload.x - 500
+                canvasLeft: payload.x - 500,
+                canvasWidth: window.innerWidth + 500 - payload.x * 2
             }
         case ActionState.RESIZEBOTTOM:
             return {
                 ...state,
-                canvasTop: payload.y - 800
+                canvasTop: payload.y - state.canvasHeight,
+                canvasHeight: window.innerHeight - (2 * (window.innerHeight - payload.y))
             }
         case ActionState.RESIZERIGHT:
             return {
                 ...state,
-                canvasLeft: payload.x - 500 - 800
+                canvasLeft: window.innerWidth - payload.x,
+                canvasWidth: window.innerWidth - 500 - (2 * (window.innerWidth - payload.x))
             }
         default:
             return state
@@ -70,14 +76,16 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
             canvasTop: (window.innerHeight - 800) / 2,
             canvasLeft: (window.innerWidth - 500 - 800) / 2,
             offset: 20,
+            minW: 100,
+            minH: 100,
         }
     );
 
-    const resize = useRef(false);
-    const resizeTop = useRef(false);
-    const resizeLeft = useRef(false);
-    const resizeBottom = useRef(false);
-    const resizeRight = useRef(false);
+    const resize = useRef<boolean>(false);
+    const resizeTop = useRef<boolean>(false);
+    const resizeLeft = useRef<boolean>(false);
+    const resizeBottom = useRef<boolean>(false);
+    const resizeRight = useRef<boolean>(false);
 
     const handleMouseMove = (event: MouseEvent) => {
         if (!resize.current) {
@@ -148,11 +156,33 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
                 document.body.style.cursor = "alias";
             };
         } else {
-            if (resizeTop.current) {
-                dispatch({type: ActionState.RESIZETOP, payload: {x: event.pageX, y: event.pageY}})
+            if (
+                resizeTop.current && 
+                event.pageY < (window.innerHeight / 2) - (state.minH / 2) && 
+                event.pageY > 0 + state.minH
+            ) {                                  
+                dispatch({type: ActionState.RESIZETOP, payload: {x: event.pageX, y: event.pageY}})      // top
             }
-            if (resizeLeft.current) {
-                dispatch({type: ActionState.RESIZELEFT, payload: {x: event.pageX, y: event.pageY}})
+            if (
+                resizeLeft.current && 
+                event.pageX < ((window.innerWidth - 500) / 2) + 500 - (state.minW / 2) && 
+                event.pageX > 500 + state.minW
+            ) {                   
+                dispatch({type: ActionState.RESIZELEFT, payload: {x: event.pageX, y: event.pageY}})     // left
+            }
+            if (resizeBottom.current &&
+                event.pageY > (window.innerHeight / 2) + (state.minH / 2) &&
+                event.pageY < window.innerHeight - state.minH
+            ) {
+                dispatch({type: ActionState.RESIZEBOTTOM, payload: {x: event.pageX, y: event.pageY}})   // bottom
+            }
+            if (
+                resizeRight.current && 
+                event.pageX - 500 > 
+                ((window.innerWidth - 500) / 2) + (state.minW / 2) && 
+                event.pageX < window.innerWidth - state.minW
+            ) {                                                                             
+                dispatch({type: ActionState.RESIZERIGHT, payload: {x: event.pageX, y: event.pageY}})    // right
             }
         }
     };
@@ -270,7 +300,7 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
             document.removeEventListener('mousedown', handleMouseDown);
             document.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [state]);
+    }, [state, handleMouseDown, handleMouseMove]);
 
     return (
         <div 
@@ -292,10 +322,10 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
                 canvasWidth={state.canvasWidth}
                 canvasHeight={state.canvasHeight}
                 heightState={936} 
-                showTop={true}
-                showLeft={true}
-                showBottom={true}
-                showRight={true} />
+                showTop={false}
+                showLeft={false}
+                showBottom={false}
+                showRight={false} />
         </div>
     )
 }

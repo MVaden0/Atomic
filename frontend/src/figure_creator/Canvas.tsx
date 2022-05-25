@@ -31,10 +31,10 @@ export const Canvas: FC<Props> = ({backgroundCanvasWidth, backgroundCanvasHeight
                 canvasWidth={canvasWidth}
                 canvasHeight={canvasHeight}
                 heightState={heightState} 
-                showTop={true}
-                showLeft={true}
-                showBottom={true}
-                showRight={true} />
+                showTop={showTop}
+                showLeft={showLeft}
+                showBottom={showBottom}
+                showRight={showRight} />
             <div 
                 className={style.canvasContainer} 
                 style={{width: `${canvasWidth}px`, height: `${canvasHeight}px`, top: `${canvasTop}px`, left: `${canvasLeft}px`}} >
