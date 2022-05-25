@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, LegacyRef} from 'react'
 import style from '../styles/FigureCreator.module.css'
 
 import { BoundingRect } from './BoundingRect'
@@ -6,6 +6,7 @@ import { BoundingRect } from './BoundingRect'
 interface Props {
     backgroundCanvasWidth: number;
     backgroundCanvasHeight: number;
+    backgroundCanvasRef: LegacyRef<HTMLDivElement>;
     canvasTop: number;
     canvasLeft: number;
     canvasWidth: number;
@@ -17,12 +18,13 @@ interface Props {
     showRight: boolean;
 }
 
-export const Canvas: FC<Props> = ({backgroundCanvasWidth, backgroundCanvasHeight, canvasTop, canvasLeft, canvasWidth, canvasHeight, heightState, showTop, showLeft, showBottom, showRight}) => {
+export const Canvas: FC<Props> = ({backgroundCanvasWidth, backgroundCanvasHeight, backgroundCanvasRef, canvasTop, canvasLeft, canvasWidth, canvasHeight, heightState, showTop, showLeft, showBottom, showRight}) => {
 
     return (
         <div 
+            ref={backgroundCanvasRef}
             className={style.container} 
-            style={{width: backgroundCanvasWidth, height: backgroundCanvasHeight, backgroundColor: '#1a1a1a'}} >
+            style={{width: '100%', height: '100%', backgroundColor: '#849483'}} >
             <BoundingRect 
                 backgroundCanvasWidth={backgroundCanvasWidth}
                 backgroundCanvasHeight={backgroundCanvasHeight}
