@@ -26,3 +26,39 @@
   stroke-width: 2;
   stroke-dasharray: 5, 5;
 }
+
+.textFieldContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 75px;
+}
+
+.textFieldInput {
+  font-family: 'Fira Code', monospace;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  width: 50px;
+}
+
+.textFieldInput:focus {
+  outline: none;
+}
+
+.testInput {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.5rem;
+  color: #f8edd6;
+  padding: 0;
+  margin: 0;
+  margin-left: .25rem;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+}
+
+.testInput:focus {
+  outline: none;
+}
