@@ -24,7 +24,7 @@ export const Canvas: FC<Props> = ({backgroundCanvasWidth, backgroundCanvasHeight
         <div 
             ref={backgroundCanvasRef}
             className={style.container} 
-            style={{width: '100%', height: '100%', backgroundColor: '#849483'}} >
+            style={{width: '100%', height: '100%', backgroundColor: '#83b4b3'}} >
             <BoundingRect 
                 backgroundCanvasWidth={backgroundCanvasWidth}
                 backgroundCanvasHeight={backgroundCanvasHeight}

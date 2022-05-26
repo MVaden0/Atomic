@@ -11,7 +11,7 @@
 
 .canvasContainer {
   border-radius: 2rem;
-  background-color: #3F3244;
+  background-color: #383838;
   position: relative;
   z-index: 999;
 }
@@ -49,11 +49,10 @@
 
 .testInput {
   font-family: 'Fira Code', monospace;
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: #f8edd6;
   padding: 0;
   margin: 0;
-  margin-left: .25rem;
   text-align: left;
   border: none;
   background-color: transparent;
@@ -61,4 +60,18 @@
 
 .testInput:focus {
   outline: none;
+}
+
+.toolBar {
+  padding: .75rem
+}
+
+
+.gridContainer {
+  padding-top: 10px;
+  width: 50%;
+  margin-left: 14px;
+  display: grid; 
+  gap: 16px; 
+  grid-template-columns: repeat(2, 1fr); 
 }

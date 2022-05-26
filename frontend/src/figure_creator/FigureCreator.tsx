@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef, useReducer, useLayoutEffect } from 'react'
+import { FC, useState, useEffect, useRef, useReducer, useLayoutEffect, useCallback } from 'react'
 import style from '../styles/FigureCreator.module.css'
 
 import { Toolbar } from './Toolbar'
@@ -136,7 +136,7 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
     const resizeBottom = useRef<boolean>(false);
     const resizeRight = useRef<boolean>(false);
 
-    const handleMouseMove = (event: MouseEvent) => {
+    const handleMouseMove = useCallback((event: MouseEvent) => {
         if (!resize.current) {
             if (
                 event.pageY < state.canvasTop + state.offset && 
@@ -234,9 +234,9 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
                 dispatch({type: ActionState.RESIZERIGHT, payload: {x: event.pageX, y: event.pageY}})    // right
             }
         }
-    };
+    }, [state]);
 
-    const handleMouseDown = (event: MouseEvent) => {
+    const handleMouseDown = useCallback((event: MouseEvent) => {
         resize.current = true;
 
         if (
@@ -323,7 +323,7 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
 
             document.body.style.cursor = 'grabbing';
         };
-    };
+    }, [state]);
 
     const handleMouseUp = (event: MouseEvent) => {
         document.body.style.cursor = 'alias';
@@ -379,9 +379,9 @@ export const FigureCreator: FC<Props> = ({backgroundColor}) => {
             className={style.pageContainer} 
             style={{width: 1920, height: 936, backgroundColor: backgroundColor}} >
             <Toolbar 
-                width={350} 
+                width={280} 
                 height={936} 
-                backgroundColor="#575C55" />
+                backgroundColor="#83b4b3" />
             <Canvas
                 backgroundCanvasWidth={1420}
                 backgroundCanvasHeight={936}
