@@ -1,0 +1,76 @@
+{
+    "objects" :[
+        {
+            "tag": "canvas",
+            "title": "canvas",
+            "parameters": [
+                {
+                    "tag": "dimensions",
+                    "parameters": [
+                        {
+                            "tag": "x",
+                            "value": 0
+                        },
+                        {
+                            "tag": "y",
+                            "value": 0
+                        },
+                        {
+                            "tag": "width",
+                            "value": 0
+                        },
+                        {
+                            "tag": "height",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "tag": "color",
+                    "parameters": [
+                        {
+                            "tag": "backgroundColor",
+                            "value": "#1a1a1a"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "tag": "circle1",
+            "title": "circle1",
+            "parameters": [
+                {
+                    "tag": "dimensions",
+                    "parameters": [
+                        {
+                            "tag": "x",
+                            "value": 0
+                        },
+                        {
+                            "tag": "y",
+                            "value": 0
+                        },
+                        {
+                            "tag": "width",
+                            "value": 0
+                        },
+                        {
+                            "tag": "height",
+                            "value": 0
+                        }
+                    ]
+                },
+                {
+                    "tag": "color",
+                    "parameters": [
+                        {
+                            "tag": "backgroundColor",
+                            "value": "#123def"
+                        }
+                    ]
+                }
+            ] 
+        }
+    ]
+}

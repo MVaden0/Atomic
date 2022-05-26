@@ -1,5 +1,5 @@
 import { FC, useState } from 'react'
-import style from '../styles/Input.module.css'
+import style from '../../styles/canvas/toolbar/Input.module.css'
 
 interface Props {
     name: string;

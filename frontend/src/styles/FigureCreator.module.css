@@ -1,31 +1,6 @@
-.pageContainer {
-  display: flex;
-  overflow-y: hidden; /* Hide vertical scrollbar */
-  overflow-x: hidden; /* Hide horizontal scrollbar */
-}
 
-.container {
-  background-color: '#1a1a1a';
-  z-index: 0;
-}
 
-.canvasContainer {
-  border-radius: 2rem;
-  background-color: #383838;
-  position: relative;
-  z-index: 999;
-}
 
-.backgroundCanvas {
-  position: absolute;
-  z-index: 1;
-}
-
-.boundingLine {
-  stroke: #f8edd6;
-  stroke-width: 2;
-  stroke-dasharray: 5, 5;
-}
 
 .textFieldContainer {
   display: flex;
@@ -47,24 +22,7 @@
   outline: none;
 }
 
-.testInput {
-  font-family: 'Fira Code', monospace;
-  font-size: 2rem;
-  color: #f8edd6;
-  padding: 0;
-  margin: 0;
-  text-align: left;
-  border: none;
-  background-color: transparent;
-}
 
-.testInput:focus {
-  outline: none;
-}
-
-.toolBar {
-  padding: .75rem
-}
 
 
 .gridContainer {
