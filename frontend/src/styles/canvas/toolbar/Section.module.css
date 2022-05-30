@@ -14,7 +14,7 @@
 }
 
 .accordion:hover {
-  animation: 1s multicolor linear infinite;
+  color: #8be782;
 }
 
 @keyframes multicolor {

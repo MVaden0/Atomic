@@ -12,9 +12,14 @@ export enum ObjectType {
     CIRCLE = 'CIRCLE',
 }
 
-export interface Object {
+export interface CanvasObject {
     tag: string;
     title: string;
     type: ObjectType;
     attributes: Attribute[];
+}
+
+export interface Point {
+    x: number;
+    y: number;
 }

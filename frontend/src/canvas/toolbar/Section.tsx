@@ -1,13 +1,12 @@
-import { FC, useRef, useState } from 'react'
+import React, { FC, useRef, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Section.module.css'
-
-import { Input } from './Input'
 
 interface Props {
   description: string;
+  children?: React.ReactNode;
 }
 
-export const Section: FC<Props> = ({description}) => {
+export const Section: FC<Props> = ({ description, children }) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
     const contentRef = useRef<HTMLDivElement>(null);
 
@@ -30,8 +29,7 @@ export const Section: FC<Props> = ({description}) => {
         <button ref={buttonRef} className={style.accordion} onClick={handleClick}>{description}</button>
         <div ref={contentRef} className={style.panel} >
             <div className={style.twoContainer}>
-                <Input name='x' color='#f8edd6' />
-                <Input name='y' color='#f8edd6' />
+                {children}
             </div>
         </div>
         </>

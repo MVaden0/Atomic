@@ -1,15 +1,13 @@
-import { FC, useState } from 'react'
+import React, { FC, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Toolbar.module.css'
-
-import { Section } from './Section';
 
 interface Props {
     width: number;
-    height: number;
     backgroundColor: string;
+    children: React.ReactNode;
 }
 
-export const Toolbar: FC<Props> = ({width, height, backgroundColor}) => {
+export const Toolbar: FC<Props> = ({width, backgroundColor, children}) => {
     const [name, setName] = useState<string>("Canvas");
 
     const handleChange = (value: string) => {
@@ -25,10 +23,7 @@ export const Toolbar: FC<Props> = ({width, height, backgroundColor}) => {
                 onChange={(e) => handleChange(e.target.value)}
                 spellCheck="false"
             />
-            <Section description='Dimensions'/>
-            <Section description='Grid'/>
-            <Section description='Color'/>
-            <Section description='Settings'/>
+            {children}
         </div>
     )
 }

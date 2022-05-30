@@ -6,6 +6,12 @@ import { canvasMouseDown, canvasMouseMove } from './CanvasAPI'
 
 import { Toolbar } from './toolbar/Toolbar'
 import { CanvasSurface } from './CanvasSurface'
+import { Section } from './toolbar/Section'
+import { Input } from './toolbar/Input'
+
+import { Ellipse } from './objects/Ellipse'
+import { Rectangle } from './objects/Rectangle'
+import { Path } from './objects/Path'
 
 interface Point {
     x: number;
@@ -176,24 +182,32 @@ const objects = {
 */
 
 export const Canvas: FC<Props> = ({backgroundColor}) => {
-
     const [state, dispatch] = useReducer(canvasReducer, 
-        {
-            bgCanvasHeight: 0,
-            bgCanvasWidth: 0,
-            bgCanvasTop: 0,
-            bgCanvasLeft: 0,
-
-            canvasHeight: 0, 
-            canvasWidth: 0,
-            canvasTop: 0,
-            canvasLeft: 0,
-
-            offset: 0,
-            minW: 0,
-            minH: 0,
+        { 
+            bgCanvasHeight: 0, bgCanvasWidth: 0, bgCanvasTop: 0, bgCanvasLeft: 0,
+            canvasHeight: 0, canvasWidth: 0, canvasTop: 0, canvasLeft: 0,
+            offset: 0, minW: 0, minH: 0,
         }
     );
+
+    const test = [
+        {
+            'tag': 'circle1',
+            'cx': 500,
+            'cy': 100,
+            'rx': 50,
+            'ry': 50,
+            'fill': '#93B7BE'
+        },
+        {
+            'tag': 'circle2',
+            'cx': 500,
+            'cy': 500,
+            'rx': 50,
+            'ry': 50,
+            'fill': '#9ECE9A'
+        },
+    ]
 
     // background canvas ref
     const backgroundCanvasRef = useRef<HTMLDivElement>(null);
@@ -284,15 +298,16 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         <div 
             className={style.pageContainer} 
             style={{width: window.innerWidth, height: window.innerHeight, backgroundColor: backgroundColor}} >
-            <Toolbar 
-                width={220} 
-                height={window.innerHeight} 
-                backgroundColor="#1a1a1a" />
-            <CanvasSurface
-                backgroundCanvasRef={backgroundCanvasRef}
-                state={state}
-                showLines={false}
-            />
+            <Toolbar width={220} backgroundColor="#1a1a1a" >
+                <Section description='Dimensions'>
+                    <Input name="x" color="#fff0ce" />
+                </Section>
+            </Toolbar>
+            <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
+                {/*<Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
+                <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>*/}
+                <Path cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
+            </CanvasSurface>
         </div>
     )
 }
