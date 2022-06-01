@@ -298,26 +298,34 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
 
     const test: BezierPoints = {
         startPoint: {
-            x: 200,
-            y: 200,
-            xC: 400,
-            yC: 200
+            x: 100,
+            y: 100,
+            xC: 200,
+            yC: 100
         },
-        points: [/*
+        points: [
             {
-                x: 400,
-                y: 400,
-                x1C: 400,
-                y1C: 200,
-                x2C: 600,
-                y2C: 400
-            }*/
+                x: 200,
+                y: 200,
+                x1C: 200,
+                y1C: 100,
+                x2C: 200,
+                y2C: 300
+            },
+            {
+                x: 300,
+                y: 300,
+                x1C: 200,
+                y1C: 300,
+                x2C: 400,
+                y2C: 300
+            }
         ],
         endPoint: {
             x: 400,
             y: 400,
             xC: 400,
-            yC: 200
+            yC: 300
         }
     }
 
