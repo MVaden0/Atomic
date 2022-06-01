@@ -5,237 +5,73 @@ import { State } from '../Canvas'
 import { Point } from'../CanvasObjectTypes'
 import { computeCursorType, objectMouseDown } from './ObjectAPI'
 
-enum ActionState {
-    MOVE = 'MOVE',
-    RESIZETOP = 'RESIZETOP',
-    RESIZEBOTTOM = 'RESIZEBOTTOM',
-    RESIZELEFT = 'RESIZELEFT',
-    RESIZERIGHT = 'RESIZERIGHT'
-}
-
-interface Action {
-    type: ActionState;
-    payload: Point | any;
-}
-
-export interface ObjectState {
-    cx: number;
-    cy: number;
-    rx: number;
-    ry: number;
-}
-
-const objectReducer = (objectState: ObjectState, action: Action) => {
-    const { type, payload } = action;
-
-    switch (type) {
-        case ActionState.MOVE:
-            return {
-                ...objectState,
-                cx: payload.x,
-                cy: payload.y,
-            }
-        case ActionState.RESIZETOP:
-            return {
-                ...objectState,
-                ry: payload.y
-            }
-        case ActionState.RESIZEBOTTOM:
-            return {
-                ...objectState,
-                ry: payload.y
-            }
-        case ActionState.RESIZELEFT:
-            return {
-                ...objectState,
-                rx: payload.x
-            }
-        case ActionState.RESIZERIGHT:
-            return {
-                ...objectState,
-                rx: payload.x
-            }
-    }
-};
+import { BezierEndPoint, BezierMiddlePoint, BezierPoints } from '../types'
 
 interface Props {
-    cx: number;
-    cy: number;
-    rx: number;
-    ry: number;
-    fill: string;
-    canvasState: State;
+    points: BezierPoints;
 }
 
-export const Path: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
-    const [objectState, dispatch] = useReducer(objectReducer, {
-        cx: cx,
-        cy: cy,
-        rx: rx,
-        ry: ry,
-    });
+export const Path: FC<Props> = ({points}) => {
+    const mapPoints = (bezierPoints: BezierPoints) => {
+        // content to be rendered
+        const content: React.ReactNode[] = [];
 
-    // is shape currently selected?
-    const [selected, setSelected] = useState<boolean>(false);
+        // points on the curve
+        const startPoint: BezierEndPoint = bezierPoints.startPoint;
+        const points: BezierMiddlePoint[] = bezierPoints.points;
+        const endPoint: BezierEndPoint = bezierPoints.endPoint;
 
-    // is shape currently moving?
-    const moving = useRef<boolean>(false);
+        // check if middle points are present
+        if (points.length < 1) {
+            const curve: React.ReactNode = (
+                <g>
+                    <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
+                        d={
+                        `M ${startPoint.x}, ${startPoint.y}
+                        C ${startPoint.xC}, ${startPoint.yC} 
+                          ${endPoint.xC}, ${endPoint.yC} 
+                          ${endPoint.x}, ${endPoint.y}
+                        M ${startPoint.x}, ${startPoint.y}
+                        Z`
+                        }
+                    />
+                    <circle fill="#fff0ce" cx={startPoint.x} cy={startPoint.y} r={6} />
+                    <circle fill="#fff0ce" cx={startPoint.xC} cy={startPoint.yC} r={6} />
+                    <circle fill="#fff0ce" cx={endPoint.xC} cy={endPoint.yC} r={6} />
+                    <circle fill="#fff0ce" cx={endPoint.x} cy={endPoint.y} r={6} />
+                </g>
+            );
 
-    // start position of cursor and shape in moving state
-    const movingCursorStart = useRef<Point>({x: 0, y: 0});
-    const movingShapeStart = useRef<Point>({x: 0, y: 0});
-
-    // reference to svg element
-    const objectRef = useRef<SVGRectElement>(null);
-
-    // resize state
-    const resize = useRef<boolean>(false);
-    const resizeTop = useRef<boolean>(false);
-    const resizeLeft = useRef<boolean>(false);
-    const resizeBottom = useRef<boolean>(false);
-    const resizeRight = useRef<boolean>(false);
-
-    // start position of cursor and shape in resizing state
-    const resizingCursorStart = useRef<Point>({x: 0, y: 0});
-    const resizingShapeStart = useRef<Point>({x: 0, y: 0});
-
-    const handleClick = useCallback((event: MouseEvent) => {
-        if (event.target !== objectRef.current) {
-            setSelected(false);
-        }
-    }, []);
-
-    const objectClick = useCallback((event: MouseEvent) => {
-        setSelected(true)
-    }, []);
-
-    const mouseDown = useCallback((event: MouseEvent) => {
-        const resizing = objectMouseDown({
-            x: event.pageX,
-            y: event.pageY,
-            top: objectState.cy - objectState.ry,
-            left: objectState.cx - objectState.rx,
-            bottom: objectState.cy + objectState.ry,
-            right: objectState.cx + objectState.rx,
-            canvasTop: canvasState.canvasTop + canvasState.bgCanvasTop,
-            canvasLeft: canvasState.canvasLeft + canvasState.bgCanvasLeft,
-            offset: 5
-        });
-
-        if (resizing.top || resizing.left || resizing.bottom || resizing.right) {
-            resizingCursorStart.current = {x: event.pageX, y: event.pageY};
-            resizingShapeStart.current = {x: objectState.rx, y: objectState.ry};
+            content.push(curve);
         } else {
-            moving.current = true;
+            for (let i: number = 0; i < points.length - 1; i++) {
+                const curve: React.ReactNode = (
+                    <g>
+                        <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
+                            d={
+                            `M ${bezierPoints[i].x}, ${bezierPoints[i].y}
+                            C ${bezierPoints[i].xC}, ${bezierPoints[i].yC} ${bezierPoints[i + 1].xC}, ${bezierPoints[i + 1].yC} ${bezierPoints[i + 1].x}, ${bezierPoints[i + 1].y}
+                            M ${bezierPoints[i].x}, ${bezierPoints[i].y}
+                            Z`
+                            }
+                        />
+                        <circle fill="#fff0ce" cx={bezierPoints[i].x} cy={bezierPoints[i].y} r={6} />
+                        <circle fill="#fff0ce" cx={bezierPoints[i].xC} cy={bezierPoints[i].yC} r={6} />
+                        <circle fill="#fff0ce" cx={bezierPoints[i + 1].xC} cy={bezierPoints[i + 1].yC} r={6} />
+                        <circle fill="#fff0ce" cx={bezierPoints[i + 1].x} cy={bezierPoints[i + 1].y} r={6} />
+                    </g>
+                );
+    
+                content.push(curve);
+            }
         }
 
-        if (resizing.top) { resizeTop.current = true; };
-        if (resizing.left) { resizeLeft.current = true; };
-        if (resizing.bottom) { resizeBottom.current = true; };
-        if (resizing.right) { resizeRight.current = true; };
-
-
-        if (moving.current) {
-            movingCursorStart.current.x = event.pageX;
-            movingShapeStart.current.x = objectState.cx;
-            movingCursorStart.current.y = event.pageY;
-            movingShapeStart.current.y = objectState.cy;
-        };
-        
-    }, [objectState, canvasState]);
-
-    const mouseMove = useCallback((event: MouseEvent) => {
-        if (moving.current && selected) {
-            const dxCursorMove = movingCursorStart.current.x - event.pageX;
-            const dxShapeMove = movingShapeStart.current.x - dxCursorMove;
-
-            const dyCursorMove = movingCursorStart.current.y - event.pageY;
-            const dyShapeMove = movingShapeStart.current.y - dyCursorMove;
-
-            dispatch({type: ActionState.MOVE, payload: {x: dxShapeMove, y: dyShapeMove}});
-        }
-
-        computeCursorType({
-            x: event.pageX,
-            y: event.pageY,
-            w: objectState.rx * 2,
-            h: objectState.ry * 2,
-            top: objectState.cy - objectState.ry,
-            left: objectState.cx - objectState.rx,
-            bottom: objectState.cy + objectState.ry,
-            right: objectState.cx + objectState.rx,
-            canvasTop: canvasState.canvasTop + canvasState.bgCanvasTop,
-            canvasLeft: canvasState.canvasLeft + canvasState.bgCanvasLeft,
-            offset: 5,
-            selected: selected
-        });
-
-        if (resizeTop.current && event.pageY - canvasState.canvasTop - canvasState.bgCanvasTop < objectState.cy - 10) {
-            const dyCursorResize = resizingCursorStart.current.y - event.pageY;
-            const dyShapeResize = resizingShapeStart.current.y + dyCursorResize;
-            dispatch({type: ActionState.RESIZETOP, payload: {x: 0, y: dyShapeResize}});
-        };
-
-        if (resizeBottom.current && event.pageY - canvasState.canvasTop - canvasState.bgCanvasTop > objectState.cy + 10) {
-            const dyCursorResize = event.pageY - resizingCursorStart.current.y;
-            const dyShapeResize = resizingShapeStart.current.y + dyCursorResize;
-            dispatch({type: ActionState.RESIZEBOTTOM, payload: {x: 0, y: dyShapeResize}});
-        };
-
-        if (resizeLeft.current && event.pageX - canvasState.canvasLeft - canvasState.bgCanvasLeft < objectState.cx - 10) {
-            const dxCursorResize = resizingCursorStart.current.x - event.pageX;
-            const dxShapeResize = resizingShapeStart.current.x + dxCursorResize;
-            dispatch({type: ActionState.RESIZELEFT, payload: {x: dxShapeResize, y: 0}});
-        };
-
-        if (resizeRight.current && event.pageX - canvasState.canvasLeft - canvasState.bgCanvasLeft > objectState.cx + 10) {
-            const dxCursorResize = event.pageX - resizingCursorStart.current.x;
-            const dxShapeResize = resizingShapeStart.current.x + dxCursorResize;
-            dispatch({type: ActionState.RESIZERIGHT, payload: {x: dxShapeResize, y: 0}});
-        };
-
-    }, [selected, objectState, canvasState, computeCursorType]);
-
-    const mouseUp = useCallback((event: MouseEvent) => {
-        moving.current = false;
-
-        resize.current = false;
-        resizeTop.current = false;
-        resizeLeft.current = false;
-        resizeBottom.current = false;
-        resizeRight.current = false;
-    }, []);
-
-    useEffect(() => {
-        const object = objectRef.current as SVGRectElement;
-        document.addEventListener('click', handleClick);
-        document.addEventListener('mousemove', mouseMove);
-        document.addEventListener('mousedown', mouseDown);
-        object.addEventListener('click', objectClick)
-        document.addEventListener('mouseup', mouseUp);
-
-        return () => {
-            document.removeEventListener('click', handleClick);
-            document.removeEventListener('mousemove', mouseMove);
-            document.removeEventListener('mousedown', mouseDown);
-            object.removeEventListener('click', objectClick)
-            document.removeEventListener('mouseup', mouseUp);
-        };
-    }, [handleClick, mouseMove, mouseDown, mouseUp, objectClick]);
-
+        return content;
+    };
 
     return (
         <g>
-            
-            <rect ref={objectRef} x={objectState.cx - objectState.rx} y={objectState.cy - objectState.ry} width={objectState.rx * 2} height={objectState.ry * 2} fill={'none'} />
-            <path fill="none" stroke="red"
-                d="M 10,30
-                A 20,20 0,0,1 50,30
-                A 20,20 0,0,1 90,30
-                Q 90,60 50,90
-                Q 10,60 10,30 z
-                " 
-            />
+            {mapPoints(points)}
         </g>
     )
 }

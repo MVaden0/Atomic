@@ -13,6 +13,8 @@ import { Ellipse } from './objects/Ellipse'
 import { Rectangle } from './objects/Rectangle'
 import { Path } from './objects/Path'
 
+import { BezierMiddlePoint, BezierEndPoint, BezierPoints } from './types'
+
 interface Point {
     x: number;
     y: number;
@@ -190,7 +192,7 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         }
     );
 
-    const test = [
+    const testy = [
         {
             'tag': 'circle1',
             'cx': 500,
@@ -294,6 +296,31 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         };
     }, [state, handleMouseDown, handleMouseMove]);
 
+    const test: BezierPoints = {
+        startPoint: {
+            x: 200,
+            y: 200,
+            xC: 400,
+            yC: 200
+        },
+        points: [/*
+            {
+                x: 400,
+                y: 400,
+                x1C: 400,
+                y1C: 200,
+                x2C: 600,
+                y2C: 400
+            }*/
+        ],
+        endPoint: {
+            x: 400,
+            y: 400,
+            xC: 400,
+            yC: 200
+        }
+    }
+
     return (
         <div 
             className={style.pageContainer} 
@@ -304,9 +331,11 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
                 </Section>
             </Toolbar>
             <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
-                {/*<Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
-                <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>*/}
-                <Path cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
+                {/*
+                <Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
+                <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
+                */}
+                <Path points={test}/>
             </CanvasSurface>
         </div>
     )
