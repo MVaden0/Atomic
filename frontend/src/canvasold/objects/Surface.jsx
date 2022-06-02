@@ -1,9 +1,9 @@
 import React from 'react'
-import style from '../styles/canvas/CanvasSurface.module.css'
+import style from '../../styles/canvas/Surface.module.css'
 
 import { BoundingRect } from './BoundingRect'
 
-export const CanvasSurface = ({state, backgroundCanvasRef, showLines, children}) => {
+export const Surface = ({state, backgroundCanvasRef, showLines, children}) => {
 
     return (
         <div 

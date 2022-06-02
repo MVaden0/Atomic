@@ -1,5 +1,5 @@
 import React from 'react';
-import { Canvas } from './canvas/Canvas';
+import { CanvasPage } from './canvas/CanvasPage';
 import './styles/global.css'
 
 
@@ -7,7 +7,7 @@ const App = () => {
 
   return (
     <div>
-      <CanvasPage />
+      <CanvasPage backgroundColor={'#1a1a1a'}/>
     </div>
   );
 }
