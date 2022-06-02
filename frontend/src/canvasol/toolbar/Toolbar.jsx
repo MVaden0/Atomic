@@ -1,9 +1,13 @@
 import React, { useContext, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Toolbar.module.css'
 
+import { useCanvasContext } from '../CanvasContextProvider';
+
 
 export const Toolbar = ({width, backgroundColor, children}) => {
     const [name, setName] = useState("Canvas");
+
+    const [context, contextDispatch] = useCanvasContext();
     
     const handleChange = (value) => {
         setName(value);
