@@ -7,7 +7,7 @@ const App = () => {
 
   return (
     <div>
-      <Canvas backgroundColor='#123eaf'/>
+      <CanvasPage />
     </div>
   );
 }
