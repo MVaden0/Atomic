@@ -3,15 +3,7 @@ import { FC } from 'react'
 import { Point } from '../CanvasObjectTypes'
 
 
-interface Props {
-    selected: boolean;
-    p1: Point;
-    p2: Point;
-    p3: Point;
-    p4: Point;
-}
-
-export const ObjectBoundingRect: FC<Props> = ({selected, p1, p2, p3, p4}) => {
+export const ObjectBoundingRect = ({selected, p1, p2, p3, p4}) => {
 
     return (
         <g>

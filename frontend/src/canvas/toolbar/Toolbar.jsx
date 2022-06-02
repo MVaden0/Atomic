@@ -1,16 +1,11 @@
 import React, { FC, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Toolbar.module.css'
 
-interface Props {
-    width: number;
-    backgroundColor: string;
-    children: React.ReactNode;
-}
 
-export const Toolbar: FC<Props> = ({width, backgroundColor, children}) => {
+export const Toolbar = ({width, backgroundColor, children}) => {
     const [name, setName] = useState<string>("Canvas");
 
-    const handleChange = (value: string) => {
+    const handleChange = (value) => {
         setName(value);
     }
 

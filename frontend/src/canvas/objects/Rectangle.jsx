@@ -5,27 +5,8 @@ import { State } from '../Canvas'
 import { Point } from'../CanvasObjectTypes'
 import { computeCursorType, objectMouseDown } from './ObjectAPI'
 
-enum ActionState {
-    MOVE = 'MOVE',
-    RESIZETOP = 'RESIZETOP',
-    RESIZEBOTTOM = 'RESIZEBOTTOM',
-    RESIZELEFT = 'RESIZELEFT',
-    RESIZERIGHT = 'RESIZERIGHT'
-}
 
-interface Action {
-    type: ActionState;
-    payload: Point | any;
-}
-
-export interface ObjectState {
-    cx: number;
-    cy: number;
-    rx: number;
-    ry: number;
-}
-
-const objectReducer = (objectState: ObjectState, action: Action) => {
+const objectReducer = (objectState, action) => {
     const { type, payload } = action;
 
     switch (type) {
@@ -58,16 +39,7 @@ const objectReducer = (objectState: ObjectState, action: Action) => {
     }
 };
 
-interface Props {
-    cx: number;
-    cy: number;
-    rx: number;
-    ry: number;
-    fill: string;
-    canvasState: State;
-}
-
-export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
+export const Rectangle = ({cx, cy, rx, ry, fill, canvasState}) => {
     const [objectState, dispatch] = useReducer(objectReducer, {
         cx: cx,
         cy: cy,
@@ -76,40 +48,40 @@ export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
     });
 
     // is shape currently selected?
-    const [selected, setSelected] = useState<boolean>(false);
+    const [selected, setSelected] = useState(false);
 
     // is shape currently moving?
-    const moving = useRef<boolean>(false);
+    const moving = useRef(false);
 
     // start position of cursor and shape in moving state
-    const movingCursorStart = useRef<Point>({x: 0, y: 0});
-    const movingShapeStart = useRef<Point>({x: 0, y: 0});
+    const movingCursorStart = useRef({x: 0, y: 0});
+    const movingShapeStart = useRef({x: 0, y: 0});
 
     // reference to svg element
-    const objectRef = useRef<SVGEllipseElement>(null);
+    const objectRef = useRef(null);
 
     // resize state
-    const resize = useRef<boolean>(false);
-    const resizeTop = useRef<boolean>(false);
-    const resizeLeft = useRef<boolean>(false);
-    const resizeBottom = useRef<boolean>(false);
-    const resizeRight = useRef<boolean>(false);
+    const resize = useRef(false);
+    const resizeTop = useRef(false);
+    const resizeLeft = useRef(false);
+    const resizeBottom = useRef(false);
+    const resizeRight = useRef(false);
 
     // start position of cursor and shape in resizing state
-    const resizingCursorStart = useRef<Point>({x: 0, y: 0});
-    const resizingShapeStart = useRef<Point>({x: 0, y: 0});
+    const resizingCursorStart = useRef({x: 0, y: 0});
+    const resizingShapeStart = useRef({x: 0, y: 0});
 
-    const handleClick = useCallback((event: MouseEvent) => {
+    const handleClick = useCallback((event) => {
         if (event.target !== objectRef.current) {
             setSelected(false);
         }
     }, []);
 
-    const objectClick = useCallback((event: MouseEvent) => {
+    const objectClick = useCallback((event) => {
         setSelected(true)
     }, []);
 
-    const mouseDown = useCallback((event: MouseEvent) => {
+    const mouseDown = useCallback((event) => {
         const resizing = objectMouseDown({
             x: event.pageX,
             y: event.pageY,
@@ -144,7 +116,7 @@ export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
         
     }, [objectState, canvasState]);
 
-    const mouseMove = useCallback((event: MouseEvent) => {
+    const mouseMove = useCallback((event) => {
         if (moving.current && selected) {
             const dxCursorMove = movingCursorStart.current.x - event.pageX;
             const dxShapeMove = movingShapeStart.current.x - dxCursorMove;
@@ -196,7 +168,7 @@ export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
 
     }, [selected, objectState, canvasState, computeCursorType]);
 
-    const mouseUp = useCallback((event: MouseEvent) => {
+    const mouseUp = useCallback((event) => {
         moving.current = false;
 
         resize.current = false;
@@ -207,7 +179,7 @@ export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
     }, []);
 
     useEffect(() => {
-        const object = objectRef.current as SVGEllipseElement;
+        const object = objectRef.current;
         document.addEventListener('click', handleClick);
         document.addEventListener('mousemove', mouseMove);
         document.addEventListener('mousedown', mouseDown);
@@ -226,7 +198,7 @@ export const Ellipse: FC<Props> = ({cx, cy, rx, ry, fill, canvasState}) => {
 
     return (
         <g>
-            <ellipse ref={objectRef} cx={objectState.cx} cy={objectState.cy} rx={objectState.rx} ry={objectState.ry} fill={fill} />
+            <rect ref={objectRef} x={objectState.cx - objectState.rx} y={objectState.cy - objectState.ry} width={objectState.rx * 2} height={objectState.ry * 2} fill={fill} />
             <ObjectBoundingRect 
                 selected={selected} 
                 p1={{x: objectState.cx + objectState.rx, y: objectState.cy - objectState.ry}} 

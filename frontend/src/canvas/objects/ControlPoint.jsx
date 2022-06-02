@@ -1,22 +1,15 @@
 import { FC, useRef, useEffect, useCallback } from 'react'
 
-import { Point } from '../types'
 
-interface Props {
-    point: Point;
-    color: string;
-    display: boolean;
-}
+export const ControlPoint = ({point, color, display}) => {
+    const objectRef = useRef(null);
 
-export const ControlPoint: FC<Props> = ({point, color, display}) => {
-    const objectRef = useRef<SVGCircleElement>(null);
-
-    const handleMouseMove = useCallback((event: MouseEvent) => {
+    const handleMouseMove = useCallback((event) => {
         document.body.style.cursor = "grabbing";
     }, []);
 
     useEffect(() => {
-        const object = objectRef.current as SVGCircleElement;
+        const object = objectRef.current;
 
         object.addEventListener('mousemove', handleMouseMove);
 

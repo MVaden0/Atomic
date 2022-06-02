@@ -1,20 +1,9 @@
-import { FC, LegacyRef} from 'react'
-import style from '../styles/canvas/CanvasSurface.module.css'
-
 import React from 'react'
-
-import { State } from './Canvas'
+import style from '../styles/canvas/CanvasSurface.module.css'
 
 import { BoundingRect } from './BoundingRect'
 
-interface Props {
-    state: State;
-    backgroundCanvasRef: LegacyRef<HTMLDivElement>;
-    showLines: boolean;
-    children: React.ReactNode
-}
-
-export const CanvasSurface: FC<Props> = ({state, backgroundCanvasRef, showLines, children}) => {
+export const CanvasSurface = ({state, backgroundCanvasRef, showLines, children}) => {
 
     return (
         <div 

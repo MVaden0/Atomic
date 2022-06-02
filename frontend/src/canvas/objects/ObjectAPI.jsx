@@ -2,22 +2,7 @@ import { off } from 'process';
 import { useCallback } from 'react'
 
 
-type Props = {
-    x: number;
-    y: number;
-    w: number;
-    h: number;
-    top: number;
-    left: number;
-    bottom: number;
-    right: number;
-    canvasTop: number;
-    canvasLeft: number;
-    offset: number;
-    selected: boolean;
-}
-
-export const computeCursorType = ({x, y, w, h, top, left, bottom, right, canvasTop, canvasLeft, offset, selected}: Props) => {
+export const computeCursorType = ({x, y, w, h, top, left, bottom, right, canvasTop, canvasLeft, offset, selected}) => {
     if (selected) {
         if (
             x - canvasLeft < left + offset &&               // top left
@@ -86,19 +71,7 @@ export const computeCursorType = ({x, y, w, h, top, left, bottom, right, canvasT
     };
 };
 
-type objectMouseDownProps = {
-    x: number,
-    y: number,
-    top: number,
-    left: number,
-    bottom: number,
-    right: number,
-    canvasTop: number,
-    canvasLeft: number,
-    offset: number,
-};
-
-export const objectMouseDown = ({x, y, top, left, bottom, right, canvasTop, canvasLeft, offset}: objectMouseDownProps) => {
+export const objectMouseDown = ({x, y, top, left, bottom, right, canvasTop, canvasLeft, offset}) => {
     let resizing = {
         top: false,
         left: false,

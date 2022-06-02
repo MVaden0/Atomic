@@ -9,23 +9,20 @@ import { ControlPoint } from './ControlPoint'
 
 import { BezierEndPoint, BezierMiddlePoint, BezierPoints } from '../types'
 
-interface Props {
-    points: BezierPoints;
-}
 
-export const Path: FC<Props> = ({points}) => {
-    const mapPoints = (bezierPoints: BezierPoints) => {
+export const Path = ({points}) => {
+    const mapPoints = (bezierPoints) => {
         // content to be rendered
-        const content: React.ReactNode[] = [];
+        const content = [];
 
         // points on the curve
-        const startPoint: BezierEndPoint = bezierPoints.startPoint;
-        const points: BezierMiddlePoint[] = bezierPoints.points;
-        const endPoint: BezierEndPoint = bezierPoints.endPoint;
+        const startPoint = bezierPoints.startPoint;
+        const points = bezierPoints.points;
+        const endPoint = bezierPoints.endPoint;
 
         // check if middle points are present
         if (points.length < 1) {
-            const curve: React.ReactNode = (
+            const curve = (
                 <g>
                     <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
                         d={
@@ -47,7 +44,7 @@ export const Path: FC<Props> = ({points}) => {
             content.push(curve);
         } else {
             // compute start curve
-            const firstCurve: React.ReactNode = (
+            const firstCurve = (
                 <g>
                     <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
                         d={
@@ -68,8 +65,8 @@ export const Path: FC<Props> = ({points}) => {
 
             content.push(firstCurve);
 
-            for (let i: number = 0; i < points.length - 1; i++) {
-                const curve: React.ReactNode = (
+            for (let i = 0; i < points.length - 1; i++) {
+                const curve = (
                     <g>
                         <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
                             d={
@@ -91,7 +88,7 @@ export const Path: FC<Props> = ({points}) => {
             }
 
             // compute last curve
-            const lastCurve: React.ReactNode = (
+            const lastCurve = (
                 <g>
                     <path fill="transparent" shapeRendering="geometricPrecision" stroke="red" strokeWidth="5"
                         d={

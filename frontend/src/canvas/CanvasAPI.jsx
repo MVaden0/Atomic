@@ -1,22 +1,4 @@
-interface State {
-    bgCanvasHeight: number;
-    bgCanvasWidth: number;
-    bgCanvasTop: number;
-    bgCanvasLeft: number;
-
-    canvasHeight: number; 
-    canvasWidth: number;
-    canvasTop: number;
-    canvasLeft: number;
-
-    offset: number;
-    minW: number;
-    minH: number;
-}
-
-export const canvasMouseDown = (
-    event: MouseEvent,
-    state: State) => {
+export const canvasMouseDown = (event, state) => {
 
     let resizeTop = false;
     let resizeLeft = false;
@@ -116,14 +98,7 @@ export const canvasMouseDown = (
     }
 };
 
-export const canvasMouseMove = (
-    resize: boolean,
-    resizeTop: boolean,
-    resizeLeft: boolean,
-    resizeBottom: boolean,
-    resizeRight: boolean,
-    event: MouseEvent,
-    state: State) => {
+export const canvasMouseMove = (resize, resizeTop, resizeLeft, resizeBottom, resizeRight, event, state) => {
     
     let resizingTop = false;
     let resizingLeft = false;

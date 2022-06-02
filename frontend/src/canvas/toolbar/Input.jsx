@@ -1,15 +1,11 @@
 import { FC, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Input.module.css'
 
-interface Props {
-    name: string;
-    color: string;
-}
 
-export const Input: FC<Props> = ({name, color}) => {
-    const [inputValue, setInputValue] = useState<string>('');
+export const Input = ({name, color}) => {
+    const [inputValue, setInputValue] = useState('');
 
-    const handleChange = (value: string) => {
+    const handleChange = (value) => {
         if (value.match(/^[0-9]*\.?[0-9]*$/) != null) {
             setInputValue(value);
         };

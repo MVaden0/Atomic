@@ -3,12 +3,8 @@ import style from '../styles/canvas/BoundingRect.module.css'
 
 import { State } from './Canvas'
 
-interface Props {
-    state: State
-    showLines: boolean;
-}
 
-export const BoundingRect: FC<Props> = ({state, showLines}) => {
+export const BoundingRect = ({state, showLines}) => {
 
     return (
         <svg 

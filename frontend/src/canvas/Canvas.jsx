@@ -13,46 +13,11 @@ import { Ellipse } from './objects/Ellipse'
 import { Rectangle } from './objects/Rectangle'
 import { Path } from './objects/Path'
 
-import { BezierMiddlePoint, BezierEndPoint, BezierPoints } from './types'
 import { CanvasContextProvider } from'./CanvasContextProvider'
-import { type } from 'os'
 import { CanvasContext } from './CanvasContextProvider'
 
-interface Point {
-    x: number;
-    y: number;
-}
 
-enum ActionState {
-    INITIALIZE = 'INITIALIZE',
-    RESIZETOP = 'RESIZETOP',
-    RESIZELEFT = 'RESIZELEFT',
-    RESIZEBOTTOM = 'RESIZEBOTTOM',
-    RESIZERIGHT = 'RESIZERIGHT',
-}
-
-interface Action {
-    type: ActionState;
-    payload: Point | any;
-}
-
-export interface State {
-    bgCanvasHeight: number;
-    bgCanvasWidth: number;
-    bgCanvasTop: number;
-    bgCanvasLeft: number;
-
-    canvasHeight: number; 
-    canvasWidth: number;
-    canvasTop: number;
-    canvasLeft: number;
-
-    offset: number;
-    minW: number;
-    minH: number;
-}
-
-const canvasReducer = (state: State, action: Action) => {
+const canvasReducer = (state, action) => {
     const { type, payload } = action;
 
     switch (type) {
@@ -100,10 +65,6 @@ const canvasReducer = (state: State, action: Action) => {
             return state
     }
 };
-
-interface Props {
-    backgroundColor: string;
-}
 
 /*
 const objects = {
@@ -186,7 +147,7 @@ const objects = {
 };
 */
 
-export const Canvas: FC<Props> = ({backgroundColor}) => {
+export const Canvas = ({backgroundColor}) => {
     const [state, dispatch] = useReducer(canvasReducer, 
         { 
             bgCanvasHeight: 0, bgCanvasWidth: 0, bgCanvasTop: 0, bgCanvasLeft: 0,
@@ -218,13 +179,13 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
     const backgroundCanvasRef = useRef<HTMLDivElement>(null);
 
     // refs have to be updated sync
-    const resize = useRef<boolean>(false);
-    const resizeTop = useRef<boolean>(false);
-    const resizeLeft = useRef<boolean>(false);
-    const resizeBottom = useRef<boolean>(false);
-    const resizeRight = useRef<boolean>(false);
+    const resize = useRef(false);
+    const resizeTop = useRef(false);
+    const resizeLeft = useRef(false);
+    const resizeBottom = useRef(false);
+    const resizeRight = useRef(false);
 
-    const handleMouseMove = useCallback((event: MouseEvent) => {
+    const handleMouseMove = useCallback((event) => {
         const resizing = canvasMouseMove(
             resize.current,
             resizeTop.current,
@@ -241,7 +202,7 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         if (resizing.right) { dispatch({type: ActionState.RESIZERIGHT, payload: {x: event.pageX, y: event.pageY}}); };
     }, [state]);
 
-    const handleMouseDown = useCallback((event: MouseEvent) => {
+    const handleMouseDown = useCallback((event) => {
         resize.current = true;
         
         const resizing = canvasMouseDown(event, state);
@@ -252,7 +213,7 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         if (resizing.right) { resizeRight.current = true; };
     }, [state]);
 
-    const handleMouseUp = (event: MouseEvent) => {
+    const handleMouseUp = (event) => {
         document.body.style.cursor = 'alias';
 
         resize.current = false;
@@ -264,7 +225,7 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
 
     // initialize state
     useLayoutEffect(() => {
-        const backgroundCanvas: HTMLDivElement = backgroundCanvasRef.current!;
+        const backgroundCanvas = backgroundCanvasRef.current;
         const { height, width, top, left } = backgroundCanvas.getBoundingClientRect();
 
         dispatch({type: ActionState.INITIALIZE, payload: {
@@ -299,7 +260,7 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         };
     }, [state, handleMouseDown, handleMouseMove]);
 
-    const test: BezierPoints = {
+    const test = {
         startPoint: {
             x: 100,
             y: 100,
