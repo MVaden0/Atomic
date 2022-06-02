@@ -1,4 +1,4 @@
-import { useEffect, useRef, useReducer, useLayoutEffect, useCallback } from 'react'
+import { useEffect, useRef, useReducer, useLayoutEffect, useCallback, useContext } from 'react'
 
 import style from '../styles/canvas/Canvas.module.css'
 
@@ -10,7 +10,7 @@ import { Section } from './toolbar/Section'
 import { Input } from './toolbar/Input'
 import { Path } from './objects/Path'
 
-import { CanvasContextProvider } from'./CanvasContextProvider'
+import { CanvasContext, CanvasContextProvider } from'./CanvasContextProvider'
 
 
 const INITIALIZE = Symbol('INITIALIZE');
@@ -297,29 +297,26 @@ export const Canvas = ({backgroundColor}) => {
         }
     }
 
-    //const a = useContext(CanvasContext);
-
     return (
         
-            <div 
+        <CanvasContextProvider>
+            <div
                 className={style.pageContainer} 
-                style={{width: window.innerWidth, height: window.innerHeight, backgroundColor: backgroundColor}} >
+                style={{width: window.innerWidth, height: window.innerHeight, backgroundColor: backgroundColor}} 
+            >
                 <Toolbar width={220} backgroundColor="#1a1a1a" >
                     <Section description='Dimensions'>
                         <Input name="x" color="#fff0ce" />
                     </Section>
                 </Toolbar>
-                <CanvasContextProvider>
-                    <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
-                        {/*
-                        <Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
-                        <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
-                        */}
-                        <Path points={test}/>
-                    </CanvasSurface>
-                </CanvasContextProvider>
-                
+                <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
+                    {/*
+                    <Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
+                    <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
+                    */}
+                    <Path points={test}/>
+                </CanvasSurface>
             </div>
-        
+        </CanvasContextProvider>   
     )
 }

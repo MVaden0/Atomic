@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react'
+import React, { createContext, useContext, useReducer } from 'react'
 
 
 const SETSELECTED = Symbol('SETSELECTED');
@@ -19,10 +19,12 @@ const canvasContextReducer = (state, action) => {
 };
 
 
-export const CanvasContext = createContext(null);
+const CanvasContext = createContext();
+
+export const useCanvasContext = () => useContext(CanvasContext);
 
 export const CanvasContextProvider =  ({children}) => {
-    const [context, contextDispatch] = useReducer(canvasContextReducer, {selected: false});
+    const [context, contextDispatch] = useReducer(canvasContextReducer, {selected: true});
 
     return (
         <CanvasContext.Provider value={[context, contextDispatch]}>
