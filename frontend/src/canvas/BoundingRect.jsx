@@ -1,7 +1,4 @@
-import { FC } from 'react'
 import style from '../styles/canvas/BoundingRect.module.css'
-
-import { State } from './Canvas'
 
 
 export const BoundingRect = ({state, showLines}) => {

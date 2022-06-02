@@ -1,13 +1,4 @@
-import { FC, useState, useCallback, useEffect, useRef, useReducer } from 'react'
-
-import { ObjectBoundingRect } from './ObjectBoundingRect'
-import { State } from '../Canvas'
-import { Point } from'../CanvasObjectTypes'
-import { computeCursorType, objectMouseDown } from './ObjectAPI'
-
 import { ControlPoint } from './ControlPoint'
-
-import { BezierEndPoint, BezierMiddlePoint, BezierPoints } from '../types'
 
 
 export const Path = ({points}) => {

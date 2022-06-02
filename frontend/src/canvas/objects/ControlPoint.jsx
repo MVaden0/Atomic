@@ -1,4 +1,4 @@
-import { FC, useRef, useEffect, useCallback } from 'react'
+import { useRef, useEffect, useCallback } from 'react'
 
 
 export const ControlPoint = ({point, color, display}) => {

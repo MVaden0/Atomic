@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Canvas } from './canvas/Canvas';
 import './styles/global.css'
 

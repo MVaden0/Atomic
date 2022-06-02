@@ -1,12 +1,12 @@
-import React, { FC, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import style from '../../styles/canvas/toolbar/Section.module.css'
 
 
 export const Section = ({ description, children }) => {
-    const buttonRef = useRef<HTMLButtonElement>(null);
-    const contentRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef(null);
+    const contentRef = useRef(null);
 
-    const [hidePanel, setHidePanel] = useState<boolean>(false);
+    const [hidePanel, setHidePanel] = useState(false);
 
     const handleClick = (event) => {
         const content = contentRef.current;

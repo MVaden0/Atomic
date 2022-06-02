@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useReducer, useLayoutEffect, useCallback, useContext} from 'react'
+import { useEffect, useRef, useReducer, useLayoutEffect, useCallback } from 'react'
 
 import style from '../styles/canvas/Canvas.module.css'
 
@@ -8,20 +8,23 @@ import { Toolbar } from './toolbar/Toolbar'
 import { CanvasSurface } from './CanvasSurface'
 import { Section } from './toolbar/Section'
 import { Input } from './toolbar/Input'
-
-import { Ellipse } from './objects/Ellipse'
-import { Rectangle } from './objects/Rectangle'
 import { Path } from './objects/Path'
 
 import { CanvasContextProvider } from'./CanvasContextProvider'
-import { CanvasContext } from './CanvasContextProvider'
+
+
+const INITIALIZE = Symbol('INITIALIZE');
+const RESIZETOP = Symbol('RESIZETOP');
+const RESIZELEFT = Symbol('RESIZELEFT');
+const RESIZEBOTTOM = Symbol('RESIZEBOTTOM');
+const RESIZERIGHT = Symbol('RESIZERIGHT');
 
 
 const canvasReducer = (state, action) => {
     const { type, payload } = action;
 
     switch (type) {
-        case ActionState.INITIALIZE:
+        case INITIALIZE:
             return {
                 bgCanvasHeight: payload.bgCanvasHeight,
                 bgCanvasWidth: payload.bgCanvasWidth,
@@ -37,25 +40,25 @@ const canvasReducer = (state, action) => {
                 minW: payload.minW,
                 minH: payload.minH
             }
-        case ActionState.RESIZETOP:
+        case RESIZETOP:
             return {
                 ...state,
                 canvasTop: payload.y,
                 canvasHeight: window.innerHeight - payload.y * 2
             }
-        case ActionState.RESIZELEFT:
+        case RESIZELEFT:
             return {
                 ...state,
                 canvasLeft: payload.x - state.bgCanvasLeft,
                 canvasWidth: window.innerWidth + state.bgCanvasLeft - payload.x * 2
             }
-        case ActionState.RESIZEBOTTOM:
+        case RESIZEBOTTOM:
             return {
                 ...state,
                 canvasTop: payload.y - state.canvasHeight,
                 canvasHeight: window.innerHeight - (2 * (window.innerHeight - payload.y))
             }
-        case ActionState.RESIZERIGHT:
+        case RESIZERIGHT:
             return {
                 ...state,
                 canvasLeft: window.innerWidth - payload.x,
@@ -156,6 +159,7 @@ export const Canvas = ({backgroundColor}) => {
         }
     );
 
+    /*
     const testy = [
         {
             'tag': 'circle1',
@@ -173,10 +177,10 @@ export const Canvas = ({backgroundColor}) => {
             'ry': 50,
             'fill': '#9ECE9A'
         },
-    ]
+    ]*/
 
     // background canvas ref
-    const backgroundCanvasRef = useRef<HTMLDivElement>(null);
+    const backgroundCanvasRef = useRef(null);
 
     // refs have to be updated sync
     const resize = useRef(false);
@@ -196,10 +200,10 @@ export const Canvas = ({backgroundColor}) => {
             state
         );
 
-        if (resizing.top) { dispatch({type: ActionState.RESIZETOP, payload: {x: event.pageX, y: event.pageY}}); };
-        if (resizing.left) { dispatch({type: ActionState.RESIZELEFT, payload: {x: event.pageX, y: event.pageY}}); };
-        if (resizing.bottom) { dispatch({type: ActionState.RESIZEBOTTOM, payload: {x: event.pageX, y: event.pageY}}); };
-        if (resizing.right) { dispatch({type: ActionState.RESIZERIGHT, payload: {x: event.pageX, y: event.pageY}}); };
+        if (resizing.top) { dispatch({type: RESIZETOP, payload: {x: event.pageX, y: event.pageY}}); };
+        if (resizing.left) { dispatch({type: RESIZELEFT, payload: {x: event.pageX, y: event.pageY}}); };
+        if (resizing.bottom) { dispatch({type: RESIZEBOTTOM, payload: {x: event.pageX, y: event.pageY}}); };
+        if (resizing.right) { dispatch({type: RESIZERIGHT, payload: {x: event.pageX, y: event.pageY}}); };
     }, [state]);
 
     const handleMouseDown = useCallback((event) => {
@@ -228,7 +232,7 @@ export const Canvas = ({backgroundColor}) => {
         const backgroundCanvas = backgroundCanvasRef.current;
         const { height, width, top, left } = backgroundCanvas.getBoundingClientRect();
 
-        dispatch({type: ActionState.INITIALIZE, payload: {
+        dispatch({type: INITIALIZE, payload: {
             bgCanvasHeight: height,
             bgCanvasWidth: width,
             bgCanvasTop: top,
@@ -293,7 +297,7 @@ export const Canvas = ({backgroundColor}) => {
         }
     }
 
-    const a = useContext(CanvasContext);
+    //const a = useContext(CanvasContext);
 
     return (
         

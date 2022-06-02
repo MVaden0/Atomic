@@ -1,9 +1,9 @@
-import React, { FC, useState } from 'react'
+import React, { useState } from 'react'
 import style from '../../styles/canvas/toolbar/Toolbar.module.css'
 
 
 export const Toolbar = ({width, backgroundColor, children}) => {
-    const [name, setName] = useState<string>("Canvas");
+    const [name, setName] = useState("Canvas");
 
     const handleChange = (value) => {
         setName(value);

@@ -1,11 +1,14 @@
 import React, { createContext, useReducer } from 'react'
 
 
+const SETSELECTED = Symbol('SETSELECTED');
+
+
 const canvasContextReducer = (state, action) => {
     const { type, payload } = action;
 
     switch (type) {
-        case ActionState.SETSELECTED:
+        case SETSELECTED:
             return {
                 ...state,
                 selected: payload,

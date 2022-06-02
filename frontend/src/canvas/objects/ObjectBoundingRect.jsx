@@ -1,7 +1,3 @@
-import { FC } from 'react'
-
-import { Point } from '../CanvasObjectTypes'
-
 
 export const ObjectBoundingRect = ({selected, p1, p2, p3, p4}) => {
 

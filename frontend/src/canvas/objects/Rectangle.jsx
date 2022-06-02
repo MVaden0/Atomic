@@ -1,40 +1,47 @@
-import { FC, useState, useCallback, useEffect, useRef, useReducer } from 'react'
+import { useState, useCallback, useEffect, useRef, useReducer } from 'react'
 
 import { ObjectBoundingRect } from './ObjectBoundingRect'
-import { State } from '../Canvas'
-import { Point } from'../CanvasObjectTypes'
 import { computeCursorType, objectMouseDown } from './ObjectAPI'
 
+const MOVE = Symbol('MOVE');
+const RESIZETOP = Symbol('RESIZETOP');
+const RESIZELEFT = Symbol('RESIZELEFT');
+const RESIZEBOTTOM = Symbol('RESIZEBOTTOM');
+const RESIZERIGHT = Symbol('RESIZERIGHT');
 
 const objectReducer = (objectState, action) => {
     const { type, payload } = action;
 
     switch (type) {
-        case ActionState.MOVE:
+        case MOVE:
             return {
                 ...objectState,
                 cx: payload.x,
                 cy: payload.y,
             }
-        case ActionState.RESIZETOP:
+        case RESIZETOP:
             return {
                 ...objectState,
                 ry: payload.y
             }
-        case ActionState.RESIZEBOTTOM:
+        case RESIZEBOTTOM:
             return {
                 ...objectState,
                 ry: payload.y
             }
-        case ActionState.RESIZELEFT:
+        case RESIZELEFT:
             return {
                 ...objectState,
                 rx: payload.x
             }
-        case ActionState.RESIZERIGHT:
+        case RESIZERIGHT:
             return {
                 ...objectState,
                 rx: payload.x
+            }
+        default:
+            return {
+                ...objectState
             }
     }
 };
@@ -124,7 +131,7 @@ export const Rectangle = ({cx, cy, rx, ry, fill, canvasState}) => {
             const dyCursorMove = movingCursorStart.current.y - event.pageY;
             const dyShapeMove = movingShapeStart.current.y - dyCursorMove;
 
-            dispatch({type: ActionState.MOVE, payload: {x: dxShapeMove, y: dyShapeMove}});
+            dispatch({type: MOVE, payload: {x: dxShapeMove, y: dyShapeMove}});
         }
 
         computeCursorType({
@@ -145,28 +152,28 @@ export const Rectangle = ({cx, cy, rx, ry, fill, canvasState}) => {
         if (resizeTop.current && event.pageY - canvasState.canvasTop - canvasState.bgCanvasTop < objectState.cy - 10) {
             const dyCursorResize = resizingCursorStart.current.y - event.pageY;
             const dyShapeResize = resizingShapeStart.current.y + dyCursorResize;
-            dispatch({type: ActionState.RESIZETOP, payload: {x: 0, y: dyShapeResize}});
+            dispatch({type: RESIZETOP, payload: {x: 0, y: dyShapeResize}});
         };
 
         if (resizeBottom.current && event.pageY - canvasState.canvasTop - canvasState.bgCanvasTop > objectState.cy + 10) {
             const dyCursorResize = event.pageY - resizingCursorStart.current.y;
             const dyShapeResize = resizingShapeStart.current.y + dyCursorResize;
-            dispatch({type: ActionState.RESIZEBOTTOM, payload: {x: 0, y: dyShapeResize}});
+            dispatch({type: RESIZEBOTTOM, payload: {x: 0, y: dyShapeResize}});
         };
 
         if (resizeLeft.current && event.pageX - canvasState.canvasLeft - canvasState.bgCanvasLeft < objectState.cx - 10) {
             const dxCursorResize = resizingCursorStart.current.x - event.pageX;
             const dxShapeResize = resizingShapeStart.current.x + dxCursorResize;
-            dispatch({type: ActionState.RESIZELEFT, payload: {x: dxShapeResize, y: 0}});
+            dispatch({type: RESIZELEFT, payload: {x: dxShapeResize, y: 0}});
         };
 
         if (resizeRight.current && event.pageX - canvasState.canvasLeft - canvasState.bgCanvasLeft > objectState.cx + 10) {
             const dxCursorResize = event.pageX - resizingCursorStart.current.x;
             const dxShapeResize = resizingShapeStart.current.x + dxCursorResize;
-            dispatch({type: ActionState.RESIZERIGHT, payload: {x: dxShapeResize, y: 0}});
+            dispatch({type: RESIZERIGHT, payload: {x: dxShapeResize, y: 0}});
         };
 
-    }, [selected, objectState, canvasState, computeCursorType]);
+    }, [selected, objectState, canvasState]);
 
     const mouseUp = useCallback((event) => {
         moving.current = false;

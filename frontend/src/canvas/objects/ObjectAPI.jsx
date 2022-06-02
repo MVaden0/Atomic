@@ -1,6 +1,3 @@
-import { off } from 'process';
-import { useCallback } from 'react'
-
 
 export const computeCursorType = ({x, y, w, h, top, left, bottom, right, canvasTop, canvasLeft, offset, selected}) => {
     if (selected) {
