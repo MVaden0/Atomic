@@ -5,6 +5,8 @@ import { State } from '../Canvas'
 import { Point } from'../CanvasObjectTypes'
 import { computeCursorType, objectMouseDown } from './ObjectAPI'
 
+import { ControlPoint } from './ControlPoint'
+
 import { BezierEndPoint, BezierMiddlePoint, BezierPoints } from '../types'
 
 interface Props {
@@ -35,10 +37,10 @@ export const Path: FC<Props> = ({points}) => {
                         Z`
                         }
                     />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={startPoint.x} cy={startPoint.y} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={startPoint.xC} cy={startPoint.yC} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={endPoint.xC} cy={endPoint.yC} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={endPoint.x} cy={endPoint.y} r={6} />
+                    <ControlPoint point={{x: startPoint.x, y: startPoint.y}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: startPoint.xC, y: startPoint.yC}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: endPoint.xC, y: endPoint.yC}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: endPoint.x, y: endPoint.y}} color={'#fff0ce'} display={true} />
                 </g>
             );
 
@@ -57,10 +59,10 @@ export const Path: FC<Props> = ({points}) => {
                         Z`
                         }
                     />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={startPoint.x} cy={startPoint.y} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={startPoint.xC} cy={startPoint.yC} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={points[0].x1C} cy={points[0].y1C} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={points[0].x} cy={points[0].y} r={6} />
+                    <ControlPoint point={{x: startPoint.x, y: startPoint.y}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: startPoint.xC, y: startPoint.yC}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: points[0].x1C, y: points[0].y1C}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: points[0].x, y: points[0].y}} color={'#fff0ce'} display={true} />
                 </g>
             );
 
@@ -79,9 +81,9 @@ export const Path: FC<Props> = ({points}) => {
                             Z`
                             }
                         />
-                        <circle style={{display: 'none'}} fill="#fff0ce" cx={points[i].x} cy={points[i].y} r={6} />
-                        <circle style={{display: 'none'}} fill="#fff0ce" cx={points[i].x1C} cy={points[i].y1C} r={6} />
-                        <circle style={{display: 'none'}} fill="#fff0ce" cx={points[i].x2C} cy={points[i].y2C} r={6} />
+                        <ControlPoint point={{x: points[i].x, y: points[i].y}} color={'#fff0ce'} display={true} />
+                        <ControlPoint point={{x: points[0].x1C, y: points[0].y1C}} color={'#fff0ce'} display={true} />
+                        <ControlPoint point={{x: points[0].x2C, y: points[0].y2C}} color={'#fff0ce'} display={true} />
                     </g>
                 );
     
@@ -101,10 +103,10 @@ export const Path: FC<Props> = ({points}) => {
                         Z`
                         }
                     />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={points[points.length - 1].x} cy={points[points.length - 1].y} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={points[points.length - 1].x2C} cy={points[points.length - 1].y2C} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={endPoint.xC} cy={endPoint.yC} r={6} />
-                    <circle style={{display: 'none'}} fill="#fff0ce" cx={endPoint.x} cy={endPoint.y} r={6} />
+                    <ControlPoint point={{x: points[points.length - 1].x, y: points[points.length - 1].y}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: points[points.length - 1].x2C, y: points[points.length - 1].y2C}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: endPoint.xC, y: endPoint.yC}} color={'#fff0ce'} display={true} />
+                    <ControlPoint point={{x: endPoint.x, y: endPoint.y}} color={'#fff0ce'} display={true} />
                 </g>
             );
 

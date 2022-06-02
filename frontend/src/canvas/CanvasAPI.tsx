@@ -195,7 +195,7 @@ export const canvasMouseMove = (
         ) {
             document.body.style.cursor = "ew-resize";                                   // right
         } else {
-            document.body.style.cursor = "alias";
+            //document.body.style.cursor = "alias";
         };
     } else {
         if (

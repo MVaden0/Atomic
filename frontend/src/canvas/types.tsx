@@ -19,3 +19,8 @@ export interface BezierPoints {
     points: BezierMiddlePoint[];
     endPoint: BezierEndPoint;
 }
+
+export interface Point {
+    x: number;
+    y: number;
+}
