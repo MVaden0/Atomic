@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useReducer, useLayoutEffect, useCallback } from 'react'
+import { FC, useEffect, useRef, useReducer, useLayoutEffect, useCallback, useContext} from 'react'
 
 import style from '../styles/canvas/Canvas.module.css'
 
@@ -14,6 +14,9 @@ import { Rectangle } from './objects/Rectangle'
 import { Path } from './objects/Path'
 
 import { BezierMiddlePoint, BezierEndPoint, BezierPoints } from './types'
+import { CanvasContextProvider } from'./CanvasContextProvider'
+import { type } from 'os'
+import { CanvasContext } from './CanvasContextProvider'
 
 interface Point {
     x: number;
@@ -329,22 +332,29 @@ export const Canvas: FC<Props> = ({backgroundColor}) => {
         }
     }
 
+    const a = useContext(CanvasContext);
+
     return (
-        <div 
-            className={style.pageContainer} 
-            style={{width: window.innerWidth, height: window.innerHeight, backgroundColor: backgroundColor}} >
-            <Toolbar width={220} backgroundColor="#1a1a1a" >
-                <Section description='Dimensions'>
-                    <Input name="x" color="#fff0ce" />
-                </Section>
-            </Toolbar>
-            <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
-                {/*
-                <Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
-                <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
-                */}
-                <Path points={test}/>
-            </CanvasSurface>
-        </div>
+        
+            <div 
+                className={style.pageContainer} 
+                style={{width: window.innerWidth, height: window.innerHeight, backgroundColor: backgroundColor}} >
+                <Toolbar width={220} backgroundColor="#1a1a1a" >
+                    <Section description='Dimensions'>
+                        <Input name="x" color="#fff0ce" />
+                    </Section>
+                </Toolbar>
+                <CanvasContextProvider>
+                    <CanvasSurface backgroundCanvasRef={backgroundCanvasRef} state={state} showLines={false}>
+                        {/*
+                        <Ellipse cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[0].fill} canvasState={state}/>
+                        <Rectangle cx={test[0].cx} cy={test[0].cy} rx={test[0].rx} ry={test[0].ry} fill={test[1].fill} canvasState={state}/>
+                        */}
+                        <Path points={test}/>
+                    </CanvasSurface>
+                </CanvasContextProvider>
+                
+            </div>
+        
     )
 }

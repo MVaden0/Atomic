@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, FC } from 'react'
+import React, { createContext, useReducer, FC, useContext, Dispatch } from 'react'
 
 
 enum ActionState {
@@ -14,8 +14,6 @@ interface State {
     selected: boolean;
 }
 
-const CanvasContext = createContext<State | null>(null);
-
 const canvasContextReducer = (state: State, action: Action) => {
     const { type, payload } = action;
 
@@ -23,7 +21,7 @@ const canvasContextReducer = (state: State, action: Action) => {
         case ActionState.SETSELECTED:
             return {
                 ...state,
-                selected: action.payload,
+                selected: payload,
             }
         default:
             return state
@@ -34,10 +32,14 @@ interface Props {
     children?: React.ReactNode
 }
 
+export const CanvasContext = createContext<(State | Dispatch<Action>)[] | null>(null);
+
 export const CanvasContextProvider: FC<Props> =  ({children}) => {
-  const [state, dispatch] = useReducer(canvasContextReducer, {selected: false});
+    const [context, contextDispatch] = useReducer(canvasContextReducer, {selected: false});
 
-  const value = {state, dispatch}
-
-  return <CanvasContext.Provider value={value}>{children}</CanvasContext.Provider>
+    return (
+        <CanvasContext.Provider value={[context, contextDispatch]}>
+            {children}
+        </CanvasContext.Provider>
+    )
 }
