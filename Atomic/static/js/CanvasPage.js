@@ -7,6 +7,7 @@
         this.DOM = {
             toolbar: document.querySelector("#toolbar"),
             title: document.querySelector("#toolbar__title"),
+            attributesContainer: document.querySelector("#toolbar__attributes__container"),
         }
 
         // state
@@ -14,7 +15,8 @@
             toolbar: {},
             title: {
                 value: "Canvas"
-            }
+            },
+            attributesContainer: {},
         }
 
         this.initialize();
