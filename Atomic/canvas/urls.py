@@ -1,8 +1,7 @@
 from django.urls import path
-from django.contrib.auth import views
 
 from .views import *
 
 urlpatterns = [
-    
+    path("", canvas_page, name="canvas-page")
 ]
