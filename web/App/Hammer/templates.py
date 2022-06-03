@@ -30,8 +30,6 @@ def insert_component_html(html):
         start_index += component_offset
         stop_index += component_offset
 
-    html = insert_component_js(html, component_name)
-
     return html
     
 
