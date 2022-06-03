@@ -13,7 +13,7 @@ html, body {
 .toolbar {
   height: 100vh;
   width: 220px;
-  border-right: 1px solid #383838;
+  border-right: 1px solid #fff0ce;
 }
 
 
@@ -71,5 +71,22 @@ html, body {
 }
 
 .container > input:focus {
+  outline: none;
+}
+
+.testInput {
+  font-family: 'Fira Code', monospace;
+  font-size: 2rem;
+  color: #f8edd6;
+  padding: .5rem;
+  margin: 0;
+  text-align: left;
+  border: none;
+  background-color: transparent;
+  overflow-x: hidden;
+  width: calc(100% - 1rem);
+}
+
+.testInput:focus {
   outline: none;
 }
