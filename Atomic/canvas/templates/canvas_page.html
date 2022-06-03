@@ -30,5 +30,33 @@
     </div>
 
     <!-- Canvas -->
+    <style>
+    </style>
+
+    <div 
+            className={style.container} 
+            style={{backgroundColor: canvasContext.surface.backgroundColor}} >
+            <div 
+                className={style.canvasContainer} 
+                style={{
+                    width: `${canvasContext.surface.width}px`, 
+                    height: `${canvasContext.surface.height}px`, 
+                    top: `${canvasContext.surface.top}px`, 
+                    left: `${canvasContext.surface.left}px`
+                }}>
+                <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                className={style.canvas} 
+                width={`${canvasContext.surface.width}px`} 
+                height={`${canvasContext.surface.height}px`} 
+                style={{
+                    backgroundColor: canvasContext.surface.foregroundColor
+                }}>
+                    {children}
+                </svg>
+            </div>
+        </div>
+
+    <!-- Canvas -->
 </section>
 {% endblock %}
