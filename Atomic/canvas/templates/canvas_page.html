@@ -31,31 +31,15 @@
 
     <!-- Canvas -->
     <style>
+        
     </style>
 
-    <div 
-            className={style.container} 
-            style={{backgroundColor: canvasContext.surface.backgroundColor}} >
-            <div 
-                className={style.canvasContainer} 
-                style={{
-                    width: `${canvasContext.surface.width}px`, 
-                    height: `${canvasContext.surface.height}px`, 
-                    top: `${canvasContext.surface.top}px`, 
-                    left: `${canvasContext.surface.left}px`
-                }}>
-                <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                className={style.canvas} 
-                width={`${canvasContext.surface.width}px`} 
-                height={`${canvasContext.surface.height}px`} 
-                style={{
-                    backgroundColor: canvasContext.surface.foregroundColor
-                }}>
-                    {children}
-                </svg>
-            </div>
+    <div class="canvas__container">
+        <div class="canvas__wrapper" style="width: 800px; height: 800px; top: 0; left: 0">
+            <svg class="canvas" style="background-color: purple" width="800px" height="800px" xmlns="http://www.w3.org/2000/svg" >
+            </svg>
         </div>
+    </div>
 
     <!-- Canvas -->
 </section>
