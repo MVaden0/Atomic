@@ -1,5 +1,0 @@
-.pageContainer {
-  display: flex;
-  overflow-y: hidden; /* Hide vertical scrollbar */
-  overflow-x: hidden; /* Hide horizontal scrollbar */
-}
