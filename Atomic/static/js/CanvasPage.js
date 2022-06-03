@@ -35,7 +35,9 @@
     constructor() {
         // DOM Elements
         this.DOM = {
-    
+            container: document.querySelector("#canvas__container"),
+            wrapper: document.querySelector("#canvas__Wrapper"),
+            canvas: document.querySelector("#canvas"),
         }
 
         // state
