@@ -42,11 +42,28 @@
                 width: window.innerWidth - 220
             },
             canvas: {
-                top: (window.innerHeight - 800) / 2,
-                left: (window.innerWidth - 220 - 800) / 2,
-                height: 800,
-                width: 800,
+                top: (window.innerHeight - (window.innerHeight - 150)) / 2,
+                left: (window.innerWidth - 220 - (window.innerHeight - 150)) / 2,
+                height: (window.innerHeight - 150),
+                width: (window.innerHeight - 150),
                 offset: 5,
+                minPadding: 50,
+                minVBounds: {
+                    low: (window.innerHeight / 2) - 50,
+                    high: (window.innerHeight / 2) + 50,
+                },
+                maxVBounds: {
+                    low: 50,
+                    high: window.innerHeight - 50
+                },
+                minHBounds: {
+                    low: ((window.innerWidth - 220) / 2) + 220 - 50,
+                    high: ((window.innerWidth - 220) / 2) + 220 + 50
+                },
+                maxHBounds: {
+                    low: 50 + 220,
+                    high: window.innerWidth - 50
+                }
             }
         }
 
@@ -65,9 +82,26 @@
         this.DOM.canvas.setAttribute("width", `${this.STATE.canvas.width}px`);
     };
 
+    setTop = (value) => {
+        this.STATE.canvas.top = value;
+        this.DOM.wrapper.style.top = `${this.STATE.canvas.top}px`;
+    };
+
     setLeft = (value) => {
         this.STATE.canvas.left = value;
         this.DOM.wrapper.style.left = `${this.STATE.canvas.left}px`;
+    };
+
+    setHeight = (value) => {
+        this.STATE.canvas.height = value;
+        this.DOM.wrapper.style.height = `${this.STATE.canvas.height}px`;
+        this.DOM.canvas.setAttribute("height", `${this.STATE.canvas.height}px`);
+    };
+
+    setWidth = (value) => {
+        this.STATE.canvas.width = value;
+        this.DOM.wrapper.style.width = `${this.STATE.canvas.width}px`;
+        this.DOM.canvas.setAttribute("width", `${this.STATE.canvas.width}px`);
     };
 }
 
@@ -93,16 +127,21 @@ class CanvasPageController {
     }
 
     handleMouseMove = (event) => {
-        if (!this.STATE.resizing) {
-            this.computeCursorType(event.pageX, event.pageY);
-        } else {
-            if (this.STATE.resizingTop) {
-                
-            }
+        const x = event.pageX;
+        const y = event.pageY;
 
-            if (this.STATE.resizingLeft) {
-                this.canvas.setLeft(event.pageX - 220);
-            }
+        if (!this.STATE.resizing) {
+            this.computeCursorType(x, y);
+        } else {
+            if (this.STATE.resizingTop && y > this.canvas.STATE.canvas.maxVBounds.low && y < this.canvas.STATE.canvas.minVBounds.low) {
+                this.canvas.setTop(y);
+                this.canvas.setHeight(window.innerHeight - (2 * y));
+            };
+
+            if (this.STATE.resizingLeft && x > this.canvas.STATE.canvas.maxHBounds.low && x < this.canvas.STATE.canvas.minHBounds.low) {
+                this.canvas.setLeft(x - 220);
+                this.canvas.setWidth(window.innerWidth - 220 - (2 * (x - 220)));
+            };
             
         }
     };
@@ -173,7 +212,7 @@ class CanvasPageController {
     };
 
     handleMouseUp = (event) => {
-        // reset 
+        // reset cursor
         document.body.style.cursor = "alias";
 
         // reset resizing state
