@@ -3,14 +3,12 @@
  */
  class Toolbar {
     constructor() {
-        // DOM Elements
         this.DOM = {
             toolbar: document.querySelector("#toolbar"),
             title: document.querySelector("#toolbar__title"),
             attributesContainer: document.querySelector("#toolbar__attributes__container"),
         }
 
-        // state
         this.STATE = {
             toolbar: {},
             title: {
@@ -33,23 +31,39 @@
  */
  class Canvas {
     constructor() {
-        // DOM Elements
         this.DOM = {
             container: document.querySelector("#canvas__container"),
-            wrapper: document.querySelector("#canvas__Wrapper"),
+            wrapper: document.querySelector("#canvas__wrapper"),
             canvas: document.querySelector("#canvas"),
         }
 
-        // state
         this.STATE = {
-        
+            container: {},
+            wrapper: {
+                top: (window.innerHeight - 800) / 2,
+                left: (window.innerWidth - 220 - 800) / 2,
+                height: 800,
+                width: 800,
+            },
+            canvas: {
+                height: 800,
+                width: 800,
+            }
         }
+
+        alert(window.innerHeight)
 
         this.initialize();
     }
 
     initialize = () => {
-    
+        this.DOM.wrapper.style.top = `${this.STATE.wrapper.top}px`;
+        this.DOM.wrapper.style.left = `${this.STATE.wrapper.left}px`;
+        this.DOM.wrapper.style.height = `${this.STATE.wrapper.height}px`;
+        this.DOM.wrapper.style.width = `${this.STATE.wrapper.width}px`;
+
+        this.DOM.canvas.setAttribute("width", this.STATE.wrapper.width);
+        this.DOM.canvas.setAttribute("height", this.STATE.wrapper.height);
     };
 }
 
