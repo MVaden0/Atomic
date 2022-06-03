@@ -6,11 +6,10 @@
 }
 
 .canvasContainer {
-  border-radius: 2rem;
   position: relative;
   z-index: 999;
 }
 
 .canvas {
-  border-radius: 2rem;
+  border-radius: 1rem;
 }
