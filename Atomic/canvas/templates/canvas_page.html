@@ -1,10 +1,13 @@
 {% extends 'index.html' %}
 
 {% block index %}
+<!-- Main Page -->
 <section class="canvas-page" style="background-color: #1a1a1a">
-    <div class="toolbar">
-        <input class="testInput" type="text" value="Canvas" spellCheck="false"/>
-        <button id="toolbar-button" class="accordion">Description</button>
+    <!-- Toolbar -->
+    <div id="toolbar" class="toolbar">
+        <!-- Main Toolbar -->
+        <input id="toolbar__title" class="toolbar__title" type="text" spellCheck="false"/>
+        <button id="toolbar-button" class="accordion">Dimensions</button>
         <div id="sec" class="panel">
             <div class="twoContainer">
                 <div class="container">
@@ -24,38 +27,5 @@
             </div>
         </div>
     </div>
-
 </section>
-
-
-<script>
-    /* Section */
-    let hidePanel = false;
-    const button = document.querySelector("#toolbar-button");
-
-    const handleClick = (event) => {
-        const content = document.querySelector("#sec");
-    
-        if (hidePanel) {
-            content.style.height = "0";
-        } else {
-            content.style.height = "50px";
-        }
-    
-        hidePanel = !hidePanel;
-    }
-
-    button.addEventListener('click', handleClick);
-
-    /* input */
-    const handleChange = (value) => {
-        if (value.match(/^[0-9]*\.?[0-9]*$/) != null) {
-            setInputValue(value);
-        };
-    };
-
-    const input = document.querySelector("#x");
-    input.addEventListener('change', handleChange);
-    
-</script>
 {% endblock %}
