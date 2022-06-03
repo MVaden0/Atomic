@@ -1,5 +1,5 @@
 /**
- * Toolbar Section
+ * Toolbar
  */
  class Toolbar {
     constructor() {
@@ -28,8 +28,32 @@
     };
 }
 
+/**
+ * Canvas
+ */
+ class Canvas {
+    constructor() {
+        // DOM Elements
+        this.DOM = {
+    
+        }
+
+        // state
+        this.STATE = {
+        
+        }
+
+        this.initialize();
+    }
+
+    initialize = () => {
+    
+    };
+}
+
 ready(() => {
     const toolbar = new Toolbar();
+    const canvas = new Canvas();
 });
 
 
