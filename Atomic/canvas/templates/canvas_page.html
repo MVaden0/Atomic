@@ -7,7 +7,20 @@
             <button id="toolbar-button" class="accordion">Description</button>
             <div id="sec" class="panel">
                 <div class="twoContainer">
-                    
+                    <div class="container">
+                        <label style="color: #fff0ce" for="x">
+                            X
+                        </label>
+                        <input 
+                            style="color: #fff0ce"
+                            type="text" 
+                            name=x 
+                            id="x"
+                            value=""
+                            spellCheck="false" 
+                            autoComplete="off"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -17,6 +30,7 @@
 
 
 <script>
+    /* Section */
     let hidePanel = false;
     const button = document.querySelector("#toolbar-button");
 
@@ -33,5 +47,16 @@
     }
 
     button.addEventListener('click', handleClick);
+
+    /* input */
+    const handleChange = (value) => {
+        if (value.match(/^[0-9]*\.?[0-9]*$/) != null) {
+            setInputValue(value);
+        };
+    };
+
+    const input = document.querySelector("#x");
+    input.addEventListener('change', handleChange);
+    
 </script>
 {% endblock %}
