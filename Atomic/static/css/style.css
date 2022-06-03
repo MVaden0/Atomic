@@ -1,3 +1,53 @@
+@import url("https://fonts.googleapis.com/css?family=Lora");
+@import url("https://fonts.googleapis.com/css?family=Fira+Code");
+
 html, body {
   margin: 0;
+}
+
+.canvas-page {
+  height: 100vh;
+  width: 100vw;
+}
+
+.toolbar {
+  height: 100vh;
+  width: 220px;
+  border-right: 1px solid #383838;
+}
+
+
+.accordion {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.25rem;
+  color: #f8edd6;
+  padding: .25rem;
+  padding-left: .75rem;
+  text-align: left;
+  border: none;
+  cursor: pointer;
+  transition: 0.4s;
+  background-color: transparent;
+  border-top: 1px solid #f8edd6;
+  width: 100%;
+}
+
+.accordion:hover {
+  color: #8be782;
+}
+
+.panel {
+  height: 0%;
+  overflow: hidden;
+  transition: height 0.2s ease-out;
+  border-bottom: 1px solid #f8edd6;
+}
+
+.twoContainer {
+  padding-top: 10px;
+  width: 50%;
+  margin-left: 14px;
+  display: grid; 
+  gap: 16px; 
+  grid-template-columns: repeat(2, 1fr); 
 }

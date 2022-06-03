@@ -1,7 +1,37 @@
 {% extends 'index.html' %}
 
 {% block index %}
-<div>
-    this is the canvas page
-</div>
+<section class="canvas-page" style="background-color: #1a1a1a">
+    <div class="toolbar">
+        <div>
+            <button id="toolbar-button" class="accordion">Description</button>
+            <div id="sec" class="panel">
+                <div class="twoContainer">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+
+<script>
+    let hidePanel = false;
+    const button = document.querySelector("#toolbar-button");
+
+    const handleClick = (event) => {
+        const content = document.querySelector("#sec");
+    
+        if (hidePanel) {
+            content.style.height = "0";
+        } else {
+            content.style.height = "50px";
+        }
+    
+        hidePanel = !hidePanel;
+    }
+
+    button.addEventListener('click', handleClick);
+</script>
 {% endblock %}
