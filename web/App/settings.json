@@ -1,0 +1,8 @@
+{
+    "DIRECTORIES": {
+        "ROOTDIR": "/home/michael/code/Atomic/web/App",
+        "PAGES": "src/pages",
+        "COMPONENTS": "src/components"
+    }
+}
+    
