@@ -38,16 +38,6 @@ const SVGXLMNS = "http://www.w3.org/2000/svg";
             canvas: document.querySelector("#canvas"),
         }
 
-        const circ = new Ellipse({
-            fill: "#fff0ce",
-            cx: 5, 
-            cy: 6, 
-            rx: 7, 
-            ry: 8
-        });
-
-        this.DOM.canvas.appendChild(circ.DOM.ref);
-
         this.STATE = {
             container: {
                 width: window.innerWidth - 220
@@ -267,27 +257,43 @@ class CanvasPageController {
         this.canvas = new Canvas();
 
         this.STATE = {
+            layerCount: 1,
+            objectCount: 0,
+            ellipseCount: 0,
             layers: [
                 {
-                    name: "layer 1",
-                    objects: [
-                        {
-                            tag: "ellipse 1",
-                            color: {
-                                fill: "#fff0ce",
-                                stroke: "transparent"
-                            },
-                            dimensions: {
-                                cx: 5,
-                                cy: 6,
-                                rx: 7,
-                                ry: 8,
-                            }
-                        }
-                    ]
+                    name: "layer 0",
+                    index: 0,
+                    objects: []
                 }
             ]
         };
+    };
+
+    render = () => {
+        for (let i = 0; i < layerCount; i++) {
+            this.STATE.layers.forEach((layer) => {
+                if (layer.index === i) {
+                    layer.objects.forEach((object) => {
+                        this.canvas.DOM.canvas.appendChild(object.DOM.ref);
+                    });
+                }
+            })
+        };
+    };
+
+    addObject = (type, layerIndex, options) => {
+        let object;
+
+        if (type === "ellipse") {
+            object = new Ellipse(options);
+        }
+
+        this.STATE.layers.forEach((layer) => {
+            if (layer.index === layerIndex) {
+                layer.objects.push(object);
+            };
+        });
     };
 };
 
@@ -295,8 +301,8 @@ class Polygon {
     constructor(options) {
         this.PRIMITIVESTATE = {
             selected: false,
-            fill: options.fill || "#000000",
-            stroke: options.stroke || "#000000",
+            fill: options.fill || "#ffffff",
+            stroke: options.stroke || "#ffffff",
             fillOpacity: options.fillOpacity || 1,
             strokeOpacity: options.strokeOpacity || 1,
             strokeWidth: options.strokWidth || 0,
@@ -311,8 +317,8 @@ class Polygon {
 class Ellipse extends Polygon {
     constructor(options) {
         super({
-            fill: options.fill || "#000000",
-            stroke: options.stroke || "#000000",
+            fill: options.fill || "#ffffff",
+            stroke: options.stroke || "#ffffff",
             fillOpacity: options.fillOpacity || 1,
             strokeOpacity: options.strokeOpacity || 1,
             strokeWidth: options.strokWidth || 0,
@@ -323,7 +329,7 @@ class Ellipse extends Polygon {
         });
 
         this.DOM = {
-            ref: null
+            ref: null,
         }
 
         this.STATE = {
@@ -335,9 +341,9 @@ class Ellipse extends Polygon {
         this.initialize();
     };
 
-    initialize = (svgParent) => {
+    initialize = () => {
         // reference to DOM element
-        this.DOM.ref = document.createElementNS(SVGXLMNS, "ellipse");
+        this.DOM.ref = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 
         // color attributes
         this.DOM.ref.setAttribute("fill", this.STATE.fill);
@@ -356,15 +362,22 @@ class Ellipse extends Polygon {
 
 ready(() => {
     const canvasPageController = new CanvasPageController();
-    const circ = new Ellipse({
-        fill: "#fff0ce",
-        cx: 5, 
-        cy: 6, 
-        rx: 7, 
-        ry: 8
-    });
 
-    alert(JSON.stringify(circ.STATE));
+    const addCircleButton = document.querySelector("#test-button");
+    addCircleButton.addEventListener('click', () => {
+        canvasPageController.addObject("ellipse", 0, {
+            fill: "#fff0ce",
+            cx: 50, 
+            cy: 60, 
+            rx: 7, 
+            ry: 8
+        })
+
+        canvasPageController.canvas.DOM.canvas.appendChild(canvasPageController.STATE.layers[0].objects[0].DOM.ref);
+    })
+
+
+    canvasPageController.canvas.DOM.canvas.appendChild(canvasPageController.STATE.layers[0].objects[0].DOM.ref);
 });
 
 
