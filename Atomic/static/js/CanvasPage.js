@@ -1,3 +1,5 @@
+const SVGXLMNS = "http://www.w3.org/2000/svg";
+
 /**
  * The toolbar is where object properties can be manipulated.
  */
@@ -258,7 +260,21 @@ class CanvasPageController {
             layers: [
                 {
                     name: "layer 1",
-                    objects: []
+                    objects: [
+                        {
+                            tag: "ellipse 1",
+                            color: {
+                                fill: "#fff0ce",
+                                stroke: "transparent"
+                            },
+                            dimensions: {
+                                cx: 5,
+                                cy: 6,
+                                rx: 7,
+                                ry: 8,
+                            }
+                        }
+                    ]
                 }
             ]
         };
@@ -269,6 +285,8 @@ class Polygon {
     constructor(options) {
         this.PRIMITIVESTATE = {
             selected: false,
+            fill: options.fill,
+            stroke: options.stroke,
             cx: options.cx,
             cy: options.cy,
             w: options.w,
@@ -286,14 +304,30 @@ class Ellipse extends Polygon {
             h: options.ry  * 2,
         });
 
-        alert(this.PRIMITIVESTATE)
+        this.DOM = {
+            ref: null
+        }
 
         this.STATE = {
             ...this.PRIMITIVESTATE,
             rx: options.rx,
             ry: options.ry,
-        }
+        };
     }
+
+    initialize = (svgParent) => {
+        // reference to DOM element
+        this.DOM.ref = document.createElementNS(SVGXLMNS, "ellipse");
+
+        // color attributes
+        this.DOM.ref.setAttribute("fill", this.STATE.fill);
+
+        // position attributes
+        this.DOM.ref.setAttribute("cx", this.STATE.cx);
+        this.DOM.ref.setAttribute("cy", this.STATE.cy);
+        this.DOM.ref.setAttribute("rx", this.STATE.rx);
+        this.DOM.ref.setAttribute("ry", this.STATE.ry); 
+    };
 }
 
 ready(() => {
