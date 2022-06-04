@@ -276,6 +276,7 @@ class CanvasPageController {
                 if (layer.index == i) {
                     layer.objects.forEach((object) => {
                         this.canvas.DOM.canvas.appendChild(object.DOM.ref);
+                        alert(object.STATE.selected)
                     });
                 }
             })
@@ -323,12 +324,57 @@ class Polygon {
             w: options.w,
             h: options.h,
         };
+
+        this.makeBoundingRect();
+    };
+
+    makeBoundingRect = () => {
+        // create bounding rect lines
+        const line1 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        line1.setAttribute("stroke", "#fff0ce");
+        line1.setAttribute("stroke-width", "2");
+        line1.setAttribute("x1", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
+        line1.setAttribute("y1", this.PRIMITIVESTATE.cy - (this.PRIMITIVESTATE.h / 2));
+        line1.setAttribute("x2", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
+        line1.setAttribute("y2", this.PRIMITIVESTATE.cy - (this.PRIMITIVESTATE.h / 2));
+
+        const line2 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        line2.setAttribute("stroke", "#fff0ce");
+        line2.setAttribute("stroke-width", "2");
+        line2.setAttribute("x1", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
+        line2.setAttribute("y1", this.PRIMITIVESTATE.cy - (this.PRIMITIVESTATE.h / 2));
+        line2.setAttribute("x2", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
+        line2.setAttribute("y2", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
+
+        const line3 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        line3.setAttribute("stroke", "#fff0ce");
+        line3.setAttribute("stroke-width", "2");
+        line3.setAttribute("x1", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
+        line3.setAttribute("y1", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
+        line3.setAttribute("x2", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
+        line3.setAttribute("y2", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
+
+        const line4 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        line4.setAttribute("stroke", "#fff0ce");
+        line4.setAttribute("stroke-width", "2");
+        line4.setAttribute("x1", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
+        line4.setAttribute("y1", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
+        line4.setAttribute("x2", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
+        line4.setAttribute("y2", this.PRIMITIVESTATE.cy - (this.PRIMITIVESTATE.h / 2));
+
+        this.PRIMITIVESTATE.boundingrect = {
+            line1: line1,
+            line2: line2,
+            line3: line3,
+            line4: line4
+        }
+
     };
 
     handleClick = (event) => {
         this.canvas.unselectAll();
         this.STATE.selected = true;
-        alert("clicked")
+        this.canvas.render();
     };
 };
 
