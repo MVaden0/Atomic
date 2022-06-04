@@ -271,9 +271,9 @@ class CanvasPageController {
     };
 
     render = () => {
-        for (let i = 0; i < layerCount; i++) {
+        for (let i = 0; i < this.STATE.layerCount; i++) {
             this.STATE.layers.forEach((layer) => {
-                if (layer.index === i) {
+                if (layer.index == i) {
                     layer.objects.forEach((object) => {
                         this.canvas.DOM.canvas.appendChild(object.DOM.ref);
                     });
@@ -371,13 +371,11 @@ ready(() => {
             cy: 60, 
             rx: 7, 
             ry: 8
-        })
+        });
 
-        canvasPageController.canvas.DOM.canvas.appendChild(canvasPageController.STATE.layers[0].objects[0].DOM.ref);
-    })
+        canvasPageController.render()
+    });
 
-
-    canvasPageController.canvas.DOM.canvas.appendChild(canvasPageController.STATE.layers[0].objects[0].DOM.ref);
 });
 
 
