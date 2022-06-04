@@ -122,38 +122,30 @@ class CanvasPageController {
             this.computeCursorType(x, y);
         } else {
             if (this.STATE.resizingTop) {
-                const height = window.innerHeight - (2 * y);
-
-                if (height < this.canvas.STATE.canvas.maxH && height > this.canvas.STATE.canvas.minH ) {
+                if (y < (window.innerHeight / 2) - 50 && y > 50) {
+                    this.canvas.setHeight(window.innerHeight - (2 * y));
                     this.canvas.setTop(y);
-                    this.canvas.setHeight(height);
                 };
             };
 
             if (this.STATE.resizingLeft) {
-                const width = window.innerWidth - 220 - (2 * (x - 220));
-
-                if (width < this.canvas.STATE.canvas.maxW && width > this.canvas.STATE.canvas.minW ) {
+                if (x < ((window.innerWidth - 220) / 2) + 220 - 50 && x > 220 + 50) {
+                    this.canvas.setWidth(window.innerWidth - 220 - (2 * (x - 220)));
                     this.canvas.setLeft(x - 220);
-                    this.canvas.setWidth(width);
                 };
             };
 
-            if (this.STATE.resizingBottom) {
-                const height = window.innerHeight - (2 * (window.innerHeight - y));
-                
-                if (height < this.canvas.STATE.canvas.maxH && height > this.canvas.STATE.canvas.minH ) {
+            if (this.STATE.resizingBottom) {    
+                if (y < window.innerHeight - 50 && y > (window.innerHeight / 2) + 50) {
+                    this.canvas.setHeight(window.innerHeight - (2 * (window.innerHeight - y)));
                     this.canvas.setTop(y - this.canvas.STATE.canvas.height);
-                    this.canvas.setHeight(height);
                 };  
             };
 
             if (this.STATE.resizingRight) {
-                const width = window.innerWidth - 220 - (2 * (window.innerWidth - x));
-
-                if (width < this.canvas.STATE.canvas.maxW && width > this.canvas.STATE.canvas.minW ) {
+                if (x < window.innerWidth - 50 && x > ((window.innerWidth - 220) / 2) + 220 + 50) {
+                    this.canvas.setWidth(window.innerWidth - 220 - (2 * (window.innerWidth - x)));
                     this.canvas.setLeft(x - 220 - this.canvas.STATE.canvas.width);
-                    this.canvas.setWidth(width);
                 };
             }; 
         };
