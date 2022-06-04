@@ -38,6 +38,16 @@ const SVGXLMNS = "http://www.w3.org/2000/svg";
             canvas: document.querySelector("#canvas"),
         }
 
+        const circ = new Ellipse({
+            fill: "#fff0ce",
+            cx: 5, 
+            cy: 6, 
+            rx: 7, 
+            ry: 8
+        });
+
+        this.DOM.canvas.appendChild(circ.DOM.ref);
+
         this.STATE = {
             container: {
                 width: window.innerWidth - 220
@@ -301,6 +311,11 @@ class Polygon {
 class Ellipse extends Polygon {
     constructor(options) {
         super({
+            fill: options.fill || "#000000",
+            stroke: options.stroke || "#000000",
+            fillOpacity: options.fillOpacity || 1,
+            strokeOpacity: options.strokeOpacity || 1,
+            strokeWidth: options.strokWidth || 0,
             cx: options.cx,
             cy: options.cy,
             w: options.rx * 2,
@@ -316,7 +331,9 @@ class Ellipse extends Polygon {
             rx: options.rx,
             ry: options.ry,
         };
-    }
+
+        this.initialize();
+    };
 
     initialize = (svgParent) => {
         // reference to DOM element
