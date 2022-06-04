@@ -48,22 +48,10 @@
                 width: (window.innerHeight - 150),
                 offset: 5,
                 minPadding: 50,
-                minVBounds: {
-                    low: (window.innerHeight / 2) - 50,
-                    high: (window.innerHeight / 2) + 50,
-                },
-                maxVBounds: {
-                    low: 50,
-                    high: window.innerHeight - 50
-                },
-                minHBounds: {
-                    low: ((window.innerWidth - 220) / 2) + 220 - 50,
-                    high: ((window.innerWidth - 220) / 2) + 220 + 50
-                },
-                maxHBounds: {
-                    low: 50 + 220,
-                    high: window.innerWidth - 50
-                }
+                minH: 100,
+                maxH: window.innerHeight - 100,
+                minW: 100,
+                maxW: window.innerWidth - 220 - 100,
             }
         }
 
@@ -133,17 +121,42 @@ class CanvasPageController {
         if (!this.STATE.resizing) {
             this.computeCursorType(x, y);
         } else {
-            if (this.STATE.resizingTop && y > this.canvas.STATE.canvas.maxVBounds.low && y < this.canvas.STATE.canvas.minVBounds.low) {
-                this.canvas.setTop(y);
-                this.canvas.setHeight(window.innerHeight - (2 * y));
+            if (this.STATE.resizingTop) {
+                const height = window.innerHeight - (2 * y);
+
+                if (height < this.canvas.STATE.canvas.maxH && height > this.canvas.STATE.canvas.minH ) {
+                    this.canvas.setTop(y);
+                    this.canvas.setHeight(height);
+                };
             };
 
-            if (this.STATE.resizingLeft && x > this.canvas.STATE.canvas.maxHBounds.low && x < this.canvas.STATE.canvas.minHBounds.low) {
-                this.canvas.setLeft(x - 220);
-                this.canvas.setWidth(window.innerWidth - 220 - (2 * (x - 220)));
+            if (this.STATE.resizingLeft) {
+                const width = window.innerWidth - 220 - (2 * (x - 220));
+
+                if (width < this.canvas.STATE.canvas.maxW && width > this.canvas.STATE.canvas.minW ) {
+                    this.canvas.setLeft(x - 220);
+                    this.canvas.setWidth(width);
+                };
             };
-            
-        }
+
+            if (this.STATE.resizingBottom) {
+                const height = window.innerHeight - (2 * (window.innerHeight - y));
+                
+                if (height < this.canvas.STATE.canvas.maxH && height > this.canvas.STATE.canvas.minH ) {
+                    this.canvas.setTop(y - this.canvas.STATE.canvas.height);
+                    this.canvas.setHeight(height);
+                };  
+            };
+
+            if (this.STATE.resizingRight) {
+                const width = window.innerWidth - 220 - (2 * (window.innerWidth - x));
+
+                if (width < this.canvas.STATE.canvas.maxW && width > this.canvas.STATE.canvas.minW ) {
+                    this.canvas.setLeft(x - 220 - this.canvas.STATE.canvas.width);
+                    this.canvas.setWidth(width);
+                };
+            }; 
+        };
     };
 
     handleMouseDown = (event) => {
