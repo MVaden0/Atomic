@@ -13,8 +13,7 @@
             toolbar: {},
             title: {
                 value: "Canvas"
-            },
-            attributesContainer: {},
+            }
         }
 
         this.initialize();
@@ -47,12 +46,12 @@
                 height: (window.innerHeight - 150),
                 width: (window.innerHeight - 150),
                 offset: 5,
-                minPadding: 50,
-                minH: 100,
-                maxH: window.innerHeight - 100,
-                minW: 100,
-                maxW: window.innerWidth - 220 - 100,
-            }
+            },
+            resizing: false,
+            resizingTop: false,
+            resizingLeft: false,
+            resizingBottom: false,
+            resizingRight: false,
         }
 
         this.initialize();
@@ -68,6 +67,11 @@
 
         this.DOM.canvas.setAttribute("height", `${this.STATE.canvas.height}px`);
         this.DOM.canvas.setAttribute("width", `${this.STATE.canvas.width}px`);
+
+
+        document.addEventListener('mousemove', (event) => { this.handleMouseMove(event); });
+        document.addEventListener('mousedown', (event) => { this.handleMouseDown(event); });
+        document.addEventListener('mouseup', (event) => { this.handleMouseUp(event); });
     };
 
     setTop = (value) => {
@@ -91,28 +95,41 @@
         this.DOM.wrapper.style.width = `${this.STATE.canvas.width}px`;
         this.DOM.canvas.setAttribute("width", `${this.STATE.canvas.width}px`);
     };
-}
 
-/**
- * CanvasPageController
- */
-class CanvasPageController {
-    constructor() {
-        this.toolbar = new Toolbar();
-        this.canvas = new Canvas();
+    computeCursorType = (x, y) => {
+        const t = this.STATE.canvas.top;
+        const l = this.STATE.canvas.left + 220;
+        const b = t + this.STATE.canvas.height;
+        const r = l + this.STATE.canvas.width;
+        const o = this.STATE.canvas.offset;
 
-        this.STATE = {
-            resizing: false,
-            resizingTop: false,
-            resizingLeft: false,
-            resizingBottom: false,
-            resizingRight: false,
-        }
-
-        document.addEventListener('mousemove', (event) => { this.handleMouseMove(event); });
-        document.addEventListener('mousedown', (event) => { this.handleMouseDown(event); });
-        document.addEventListener('mouseup', (event) => { this.handleMouseUp(event); });
-    }
+        if (x > l - o && x < l + o && y > t - o && y < t + o) {     // top left
+            document.body.style.cursor = "nwse-resize";
+        } else
+        if (x > r - o && x < r + o && y > b - o && y < b + o) {     // bottom right
+            document.body.style.cursor = "nwse-resize";
+        } else
+        if (x > r - o && x < r + o && y > t - o && y < t + o) {     // top right
+            document.body.style.cursor = "nesw-resize";
+        } else
+        if (x > l - o && x < l + o && y > b - o && y < b + o) {     // bottom left
+            document.body.style.cursor = "nesw-resize";
+        } else
+        if (x > l + o && x < r - o && y > t - o && y < t + o) {     // top
+            document.body.style.cursor = "ns-resize";
+        } else
+        if (x > l - o && x < l + o && y > t + o && y < b - o) {     // left
+            document.body.style.cursor = "ew-resize";
+        } else
+        if (x > l + o && x < r - o && y > b - o && y < b + o) {     // bottom
+            document.body.style.cursor = "ns-resize";
+        } else
+        if (x > r - o && x < r + o && y > t + o && y < b - o) {     // right
+            document.body.style.cursor = "ew-resize";
+        } else {
+            document.body.style.cursor = "alias";
+        };
+    };
 
     handleMouseMove = (event) => {
         const x = event.pageX;
@@ -123,40 +140,40 @@ class CanvasPageController {
         } else {
             if (this.STATE.resizingTop) {
                 if (y < (window.innerHeight / 2) - 50 && y > 50) {
-                    this.canvas.setHeight(window.innerHeight - (2 * y));
-                    this.canvas.setTop(y);
+                    this.setHeight(window.innerHeight - (2 * y));
+                    this.setTop(y);
                 };
             };
 
             if (this.STATE.resizingLeft) {
                 if (x < ((window.innerWidth - 220) / 2) + 220 - 50 && x > 220 + 50) {
-                    this.canvas.setWidth(window.innerWidth - 220 - (2 * (x - 220)));
-                    this.canvas.setLeft(x - 220);
+                    this.setWidth(window.innerWidth - 220 - (2 * (x - 220)));
+                    this.setLeft(x - 220);
                 };
             };
 
             if (this.STATE.resizingBottom) {    
                 if (y < window.innerHeight - 50 && y > (window.innerHeight / 2) + 50) {
-                    this.canvas.setHeight(window.innerHeight - (2 * (window.innerHeight - y)));
-                    this.canvas.setTop(y - this.canvas.STATE.canvas.height);
+                    this.setHeight(window.innerHeight - (2 * (window.innerHeight - y)));
+                    this.setTop(y - this.STATE.canvas.height);
                 };  
             };
 
             if (this.STATE.resizingRight) {
                 if (x < window.innerWidth - 50 && x > ((window.innerWidth - 220) / 2) + 220 + 50) {
-                    this.canvas.setWidth(window.innerWidth - 220 - (2 * (window.innerWidth - x)));
-                    this.canvas.setLeft(x - 220 - this.canvas.STATE.canvas.width);
+                    this.setWidth(window.innerWidth - 220 - (2 * (window.innerWidth - x)));
+                    this.setLeft(x - 220 - this.STATE.canvas.width);
                 };
             }; 
         };
     };
 
     handleMouseDown = (event) => {
-        const t = this.canvas.STATE.canvas.top;
-        const l = this.canvas.STATE.canvas.left + 220;
-        const b = t + this.canvas.STATE.canvas.height;
-        const r = l + this.canvas.STATE.canvas.width;
-        const o = this.canvas.STATE.canvas.offset;
+        const t = this.STATE.canvas.top;
+        const l = this.STATE.canvas.left + 220;
+        const b = t + this.STATE.canvas.height;
+        const r = l + this.STATE.canvas.width;
+        const o = this.STATE.canvas.offset;
         const x = event.pageX;
         const y = event.pageY;
 
@@ -227,39 +244,22 @@ class CanvasPageController {
         this.STATE.resizingBottom = false;
         this.STATE.resizingRight = false;
     };
+};
 
-    computeCursorType = (x, y) => {
-        const t = this.canvas.STATE.canvas.top;
-        const l = this.canvas.STATE.canvas.left + 220;
-        const b = t + this.canvas.STATE.canvas.height;
-        const r = l + this.canvas.STATE.canvas.width;
-        const o = this.canvas.STATE.canvas.offset;
+/**
+ * CanvasPageController
+ */
+class CanvasPageController {
+    constructor() {
+        this.toolbar = new Toolbar();
+        this.canvas = new Canvas();
 
-        if (x > l - o && x < l + o && y > t - o && y < t + o) {     // top left
-            document.body.style.cursor = "nwse-resize";
-        } else
-        if (x > r - o && x < r + o && y > b - o && y < b + o) {     // bottom right
-            document.body.style.cursor = "nwse-resize";
-        } else
-        if (x > r - o && x < r + o && y > t - o && y < t + o) {     // top right
-            document.body.style.cursor = "nesw-resize";
-        } else
-        if (x > l - o && x < l + o && y > b - o && y < b + o) {     // bottom left
-            document.body.style.cursor = "nesw-resize";
-        } else
-        if (x > l + o && x < r - o && y > t - o && y < t + o) {     // top
-            document.body.style.cursor = "ns-resize";
-        } else
-        if (x > l - o && x < l + o && y > t + o && y < b - o) {     // left
-            document.body.style.cursor = "ew-resize";
-        } else
-        if (x > l + o && x < r - o && y > b - o && y < b + o) {     // bottom
-            document.body.style.cursor = "ns-resize";
-        } else
-        if (x > r - o && x < r + o && y > t + o && y < b - o) {     // right
-            document.body.style.cursor = "ew-resize";
-        } else {
-            document.body.style.cursor = "alias";
+        this.STATE = {
+            resizing: false,
+            resizingTop: false,
+            resizingLeft: false,
+            resizingBottom: false,
+            resizingRight: false,
         };
     };
 };
