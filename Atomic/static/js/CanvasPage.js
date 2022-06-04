@@ -282,11 +282,21 @@ class CanvasPageController {
         };
     };
 
+    unselectAll = () => {
+        for (let i = 0; i < this.STATE.layerCount; i++) {
+            this.STATE.layers.forEach((layer) => {
+                layer.objects.forEach((object) => {
+                    object.STATE.selected = false;
+                });
+            })
+        };
+    };
+
     addObject = (type, layerIndex, options) => {
         let object;
 
         if (type === "ellipse") {
-            object = new Ellipse(options);
+            object = new Ellipse(this, options);
         }
 
         this.STATE.layers.forEach((layer) => {
@@ -298,7 +308,9 @@ class CanvasPageController {
 };
 
 class Polygon {
-    constructor(options) {
+    constructor(canvas, options) {
+        this.canvas = canvas;
+
         this.PRIMITIVESTATE = {
             selected: false,
             fill: options.fill || "#ffffff",
@@ -312,11 +324,17 @@ class Polygon {
             h: options.h,
         };
     };
+
+    handleClick = (event) => {
+        this.canvas.unselectAll();
+        this.STATE.selected = true;
+        alert("clicked")
+    };
 };
 
 class Ellipse extends Polygon {
-    constructor(options) {
-        super({
+    constructor(canvas, options) {
+        super(canvas, {
             fill: options.fill || "#ffffff",
             stroke: options.stroke || "#ffffff",
             fillOpacity: options.fillOpacity || 1,
@@ -357,6 +375,8 @@ class Ellipse extends Polygon {
         this.DOM.ref.setAttribute("cy", this.STATE.cy);
         this.DOM.ref.setAttribute("rx", this.STATE.rx);
         this.DOM.ref.setAttribute("ry", this.STATE.ry); 
+
+        this.DOM.ref.addEventListener('click', (event) => { this.handleClick(event); });
     };
 }
 
@@ -367,10 +387,10 @@ ready(() => {
     addCircleButton.addEventListener('click', () => {
         canvasPageController.addObject("ellipse", 0, {
             fill: "#fff0ce",
-            cx: 50, 
-            cy: 60, 
-            rx: 7, 
-            ry: 8
+            cx: 400, 
+            cy: 400, 
+            rx: 50, 
+            ry: 50
         });
 
         canvasPageController.render()
