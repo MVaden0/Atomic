@@ -265,8 +265,42 @@ class CanvasPageController {
     };
 };
 
+class Polygon {
+    constructor(options) {
+        this.PRIMITIVESTATE = {
+            selected: false,
+            cx: options.cx,
+            cy: options.cy,
+            w: options.w,
+            h: options.h,
+        };
+    };
+};
+
+class Ellipse extends Polygon {
+    constructor(options) {
+        super({
+            cx: options.cx,
+            cy: options.cy,
+            w: options.rx * 2,
+            h: options.ry  * 2,
+        });
+
+        alert(this.PRIMITIVESTATE)
+
+        this.STATE = {
+            ...this.PRIMITIVESTATE,
+            rx: options.rx,
+            ry: options.ry,
+        }
+    }
+}
+
 ready(() => {
     const canvasPageController = new CanvasPageController();
+    const circ = new Ellipse({cx: 5, cy: 6, rx: 7, ry: 8});
+
+    alert(JSON.stringify(circ.STATE));
 });
 
 
