@@ -276,7 +276,16 @@ class CanvasPageController {
                 if (layer.index == i) {
                     layer.objects.forEach((object) => {
                         this.canvas.DOM.canvas.appendChild(object.DOM.ref);
-                        alert(object.STATE.selected)
+                        this.canvas.DOM.canvas.appendChild(object.STATE.boundingrect.line1);
+                        this.canvas.DOM.canvas.appendChild(object.STATE.boundingrect.line2);
+                        this.canvas.DOM.canvas.appendChild(object.STATE.boundingrect.line3);
+                        this.canvas.DOM.canvas.appendChild(object.STATE.boundingrect.line4);
+
+                        if (object.STATE.selected) {
+                            object.showBoundingRect();
+                        } else {
+                            object.hideBoundingRect();
+                        }
                     });
                 }
             })
@@ -330,7 +339,8 @@ class Polygon {
 
     makeBoundingRect = () => {
         // create bounding rect lines
-        const line1 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        const line1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line1.style.display = "none";
         line1.setAttribute("stroke", "#fff0ce");
         line1.setAttribute("stroke-width", "2");
         line1.setAttribute("x1", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
@@ -338,7 +348,8 @@ class Polygon {
         line1.setAttribute("x2", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
         line1.setAttribute("y2", this.PRIMITIVESTATE.cy - (this.PRIMITIVESTATE.h / 2));
 
-        const line2 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        const line2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line2.style.display = "none";
         line2.setAttribute("stroke", "#fff0ce");
         line2.setAttribute("stroke-width", "2");
         line2.setAttribute("x1", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
@@ -346,7 +357,8 @@ class Polygon {
         line2.setAttribute("x2", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
         line2.setAttribute("y2", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
 
-        const line3 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        const line3 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line3.style.display = "none";
         line3.setAttribute("stroke", "#fff0ce");
         line3.setAttribute("stroke-width", "2");
         line3.setAttribute("x1", this.PRIMITIVESTATE.cx - (this.PRIMITIVESTATE.w / 2));
@@ -354,7 +366,8 @@ class Polygon {
         line3.setAttribute("x2", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
         line3.setAttribute("y2", this.PRIMITIVESTATE.cy + (this.PRIMITIVESTATE.h / 2));
 
-        const line4 = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        const line4 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line4.style.display = "none";
         line4.setAttribute("stroke", "#fff0ce");
         line4.setAttribute("stroke-width", "2");
         line4.setAttribute("x1", this.PRIMITIVESTATE.cx + (this.PRIMITIVESTATE.w / 2));
@@ -369,6 +382,20 @@ class Polygon {
             line4: line4
         }
 
+    };
+
+    showBoundingRect = () => {
+        this.STATE.boundingrect.line1.style.display = "block";
+        this.STATE.boundingrect.line2.style.display = "block";
+        this.STATE.boundingrect.line3.style.display = "block";
+        this.STATE.boundingrect.line4.style.display = "block";
+    };
+
+    hideBoundingRect = () => {
+        this.STATE.boundingrect.line1.style.display = "none";
+        this.STATE.boundingrect.line2.style.display = "none";
+        this.STATE.boundingrect.line3.style.display = "none";
+        this.STATE.boundingrect.line4.style.display = "none";
     };
 
     handleClick = (event) => {
