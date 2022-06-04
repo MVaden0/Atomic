@@ -285,8 +285,11 @@ class Polygon {
     constructor(options) {
         this.PRIMITIVESTATE = {
             selected: false,
-            fill: options.fill,
-            stroke: options.stroke,
+            fill: options.fill || "#000000",
+            stroke: options.stroke || "#000000",
+            fillOpacity: options.fillOpacity || 1,
+            strokeOpacity: options.strokeOpacity || 1,
+            strokeWidth: options.strokWidth || 0,
             cx: options.cx,
             cy: options.cy,
             w: options.w,
@@ -321,8 +324,12 @@ class Ellipse extends Polygon {
 
         // color attributes
         this.DOM.ref.setAttribute("fill", this.STATE.fill);
+        this.DOM.ref.setAttribute("stroke", this.STATE.stroke);
+        this.DOM.ref.setAttribute("fill-opacity", this.STATE.fillOpacity);
+        this.DOM.ref.setAttribute("stroke-opacity", this.STATE.strokeOpacity);
 
         // position attributes
+        this.DOM.ref.setAttribute("stroke-width", this.STATE.strokeWidth);
         this.DOM.ref.setAttribute("cx", this.STATE.cx);
         this.DOM.ref.setAttribute("cy", this.STATE.cy);
         this.DOM.ref.setAttribute("rx", this.STATE.rx);
@@ -332,7 +339,13 @@ class Ellipse extends Polygon {
 
 ready(() => {
     const canvasPageController = new CanvasPageController();
-    const circ = new Ellipse({cx: 5, cy: 6, rx: 7, ry: 8});
+    const circ = new Ellipse({
+        fill: "#fff0ce",
+        cx: 5, 
+        cy: 6, 
+        rx: 7, 
+        ry: 8
+    });
 
     alert(JSON.stringify(circ.STATE));
 });
