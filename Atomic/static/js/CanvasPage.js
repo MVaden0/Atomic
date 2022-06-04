@@ -1,5 +1,5 @@
 /**
- * Toolbar
+ * The toolbar is where object properties can be manipulated.
  */
  class Toolbar {
     constructor() {
@@ -247,7 +247,7 @@
 };
 
 /**
- * CanvasPageController
+ * The CanvasPageController class provides a callable object that acts as a driver for the canvas page's interface.
  */
 class CanvasPageController {
     constructor() {
@@ -255,11 +255,12 @@ class CanvasPageController {
         this.canvas = new Canvas();
 
         this.STATE = {
-            resizing: false,
-            resizingTop: false,
-            resizingLeft: false,
-            resizingBottom: false,
-            resizingRight: false,
+            layers: [
+                {
+                    name: "layer 1",
+                    objects: []
+                }
+            ]
         };
     };
 };
